@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nithin T | AI & Data Science Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#06b6d4', // Cyan
+                        secondary: '#3b82f6', // Blue
+                        accent: '#8b5cf6', // Violet
+                        matrix: '#39ff88', // Matrix green
+                        neonPink: '#ff2fb3',
+                        neonAmber: '#ffb020',
+                        darkBg: '#05070d',
+                        cardBg: '#0d1220',
+                        cardBorder: '#1f2937'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & Lucide Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #05070d;
+            color: #f3f4f6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ===== Tech grid + circuit background layer ===== */
+        #circuit-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(6, 182, 212, 0.09) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.09) 1px, transparent 1px);
+            background-size: 42px 42px;
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 75%);
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 75%);
+            animation: gridDrift 22s linear infinite;
+        }
+        @keyframes gridDrift {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: 42px 84px, 42px 84px; }
+        }
+
+        #particle-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* Cursor-reactive spotlight */
+        #cursor-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 480px;
+            height: 480px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(6,182,212,0.10), rgba(139,92,246,0.06) 45%, transparent 70%);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 1;
+            transition: opacity 0.4s ease;
+            will-change: transform;
+        }
+
+        main, nav, footer, section, #scroll-progress {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Horizontal scan-line sweep */
+        .scan-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #06b6d4, #8b5cf6, #ff2fb3, transparent);
+            opacity: 0.7;
+            animation: scanSweep 5s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scanSweep {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* HUD ticker strip */
+        .hud-ticker {
+            overflow: hidden;
+            white-space: nowrap;
+            border-bottom: 1px solid rgba(6,182,212,0.25);
+            background: linear-gradient(90deg, rgba(6,182,212,0.08), rgba(139,92,246,0.08));
+        }
+        .hud-ticker-track {
+            display: inline-block;
+            padding-left: 100%;
+            animation: tickerScroll 26s linear infinite;
+        }
+        @keyframes tickerScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 25%, #8b5cf6 50%, #ff2fb3 75%, #39ff88 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 6s ease infinite;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Glow card with animated rotating gradient border */
+        .glow-card {
+            position: relative;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+        .glow-card:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 20px 45px -15px rgba(6, 182, 212, 0.45), 0 0 30px -8px rgba(139, 92, 246, 0.3);
+        }
+        .glow-card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: conic-gradient(from var(--angle, 0deg), #06b6d4, #8b5cf6, #ff2fb3, #39ff88, #06b6d4);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.18;
+            transition: opacity 0.35s ease;
+            animation: rotateBorder 4s linear infinite;
+            pointer-events: none;
+        }
+        .glow-card:hover::before {
+            opacity: 1;
+            animation-duration: 1.8s;
+        }
+        /* corner tech brackets on cards */
+        .glow-card::after {
+            content: '';
+            position: absolute;
+            top: 8px; left: 8px; right: 8px; bottom: 8px;
+            border-radius: inherit;
+            box-shadow: inset 0 0 0 1px transparent;
+            pointer-events: none;
+        }
+        @property --angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+        @keyframes rotateBorder {
+            to { --angle: 360deg; }
+        }
+
+        /* Floating gradient blobs */
+        .blob {
+            animation: blobMove 14s ease-in-out infinite;
+        }
+        .blob-delay {
+            animation-delay: -7s;
+        }
+        @keyframes blobMove {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(40px, -30px) scale(1.15); }
+            66% { transform: translate(-30px, 25px) scale(0.9); }
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Scroll progress bar */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: linear-gradient(90deg, #06b6d4, #3b82f6, #8b5cf6, #ec4899);
+            z-index: 60;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Pulsing status dot already exists via animate-ping, add glow pulse for cta */
+        .pulse-glow {
+            animation: pulseGlow 2.4s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.45); }
+            50% { box-shadow: 0 0 0 10px rgba(6, 182, 212, 0); }
+        }
+
+        /* Skill tag hover pop */
+        .skill-tag {
+            transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+        .skill-tag:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 14px rgba(6, 182, 212, 0.45);
+        }
+
+        /* Typing cursor for terminal */
+        .type-cursor::after {
+            content: '▌';
+            color: #06b6d4;
+            animation: blinkCursor 1s step-end infinite;
+        }
+        @keyframes blinkCursor {
+            50% { opacity: 0; }
+        }
+
+        /* Timeline dot glow pulse */
+        .timeline-dot {
+            animation: dotPulse 2.6s ease-in-out infinite;
+        }
+        @keyframes dotPulse {
+            0%, 100% { box-shadow: 0 0 0 0 currentColor; }
+            50% { box-shadow: 0 0 12px 2px currentColor; }
+        }
+
+        /* Metric number glow pulse */
+        .metric-glow {
+            animation: metricPulse 3.2s ease-in-out infinite;
+        }
+        @keyframes metricPulse {
+            0%, 100% { text-shadow: 0 0 6px currentColor; }
+            50% { text-shadow: 0 0 18px currentColor, 0 0 4px currentColor; }
+        }
+
+        /* Glitch flicker for tech accents */
+        .glitch-text {
+            position: relative;
+            display: inline-block;
+        }
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            overflow: hidden;
+            background: transparent;
+        }
+        .glitch-text::before {
+            color: #06b6d4;
+            clip-path: inset(0 0 55% 0);
+            animation: glitchTop 5.5s infinite linear;
+        }
+        .glitch-text::after {
+            color: #ff2fb3;
+            clip-path: inset(55% 0 0 0);
+            animation: glitchBottom 5.5s infinite linear;
+        }
+        @keyframes glitchTop {
+            0%, 92%, 100% { transform: translate(0, 0); opacity: 0; }
+            93% { transform: translate(-2px, -1px); opacity: 0.8; }
+            95% { transform: translate(2px, 1px); opacity: 0.8; }
+            97% { transform: translate(-1px, 0); opacity: 0; }
+        }
+        @keyframes glitchBottom {
+            0%, 92%, 100% { transform: translate(0, 0); opacity: 0; }
+            93% { transform: translate(2px, 1px); opacity: 0.8; }
+            95% { transform: translate(-2px, -1px); opacity: 0.8; }
+            97% { transform: translate(1px, 0); opacity: 0; }
+        }
+
+        /* Vivid neon hover for nav links */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 0%;
+            height: 2px;
+            background: linear-gradient(90deg, #06b6d4, #8b5cf6, #ff2fb3);
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.8);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Animated multi-color underline divider */
+        .neon-divider {
+            height: 2px;
+            background: linear-gradient(90deg, #06b6d4, #8b5cf6, #ff2fb3, #39ff88, #06b6d4);
+            background-size: 300% 100%;
+            animation: gradientShift 6s ease infinite;
+            border-radius: 2px;
+        }
+
+        /* Section eyebrow glow */
+        .eyebrow-glow {
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.6);
+        }
+
+        /* Shimmer sweep for primary CTAs */
+        .shimmer-cta {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-cta::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -60%;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+            transform: skewX(-20deg);
+            animation: shimmerSweep 3.2s ease-in-out infinite;
+        }
+        @keyframes shimmerSweep {
+            0% { left: -60%; }
+            50%, 100% { left: 130%; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-gray-200 antialiased selection:bg-cyan-500 selection:text-white">
+
+    <!-- Ambient tech background layers -->
+    <div id="circuit-bg"></div>
+    <canvas id="particle-canvas"></canvas>
+    <div id="cursor-glow"></div>
+
+    <div id="scroll-progress"></div>
+
+    <!-- HUD status ticker -->
+    <div class="hud-ticker fixed top-[3px] left-0 w-full z-40 text-[11px] font-mono text-cyan-400/80 py-1">
+        <div class="hud-ticker-track">
+            <span class="mx-6">◉ SYSTEM ONLINE</span>
+            <span class="mx-6">// AI &amp; DATA SCIENCE ENGINE v2.6</span>
+            <span class="mx-6">MODEL_ACCURACY: 89.68%</span>
+            <span class="mx-6">STATUS: OPEN_TO_OPPORTUNITIES</span>
+            <span class="mx-6">◉ SYSTEM ONLINE</span>
+            <span class="mx-6">// AI &amp; DATA SCIENCE ENGINE v2.6</span>
+            <span class="mx-6">MODEL_ACCURACY: 89.68%</span>
+            <span class="mx-6">STATUS: OPEN_TO_OPPORTUNITIES</span>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-[29px] left-0 w-full z-50 bg-darkBg/80 backdrop-blur-md border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="#" class="flex items-center space-x-2">
+                <span class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-cyan-500/30">N</span>
+                <span class="text-xl font-bold tracking-tight text-white font-mono">NITHIN<span class="text-cyan-400">.T</span></span>
+            </a>
+
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-300">
+                <a href="#about" class="nav-link hover:text-cyan-400 transition-colors">About</a>
+                <a href="#education" class="nav-link hover:text-cyan-400 transition-colors">Education</a>
+                <a href="#skills" class="nav-link hover:text-cyan-400 transition-colors">Skills</a>
+                <a href="#projects" class="nav-link hover:text-cyan-400 transition-colors">Projects</a>
+                <a href="#experience" class="nav-link hover:text-cyan-400 transition-colors">Experience</a>
+                <a href="#publications" class="nav-link hover:text-cyan-400 transition-colors">Publications</a>
+                <a href="#contact" class="nav-link hover:text-cyan-400 transition-colors">Contact</a>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <a href="#contact" class="shimmer-cta px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-cyan-500 via-blue-600 to-fuchsia-500 hover:opacity-90 text-white transition-all shadow-md shadow-cyan-500/20">
+                    Get in Touch
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center pt-32 pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <!-- Background glow shapes -->
+        <div class="blob absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="blob blob-delay absolute bottom-1/4 right-10 w-80 h-80 bg-blue-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="blob absolute top-10 right-1/3 w-72 h-72 bg-pink-500/15 rounded-full blur-3xl pointer-events-none" style="animation-delay:-4s;"></div>
+        <div class="blob absolute bottom-10 left-10 w-64 h-64 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" style="animation-delay:-10s;"></div>
+        <div class="scan-line"></div>
+
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+            <div class="lg:col-span-7 space-y-6 text-left">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-400 text-xs font-mono glow-card">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                    <span>AI & Data Science Specialist</span>
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight">
+                    <span class="glitch-text" data-text="Building intelligent solutions with">Building intelligent solutions with</span> <span class="gradient-text">data, vision, and code.</span>
+                </h1>
+
+                <p class="text-lg text-gray-400 max-w-2xl leading-relaxed">
+                    Artificial Intelligence and Data Science engineer specializing in Computer Vision, Machine Learning, and Full-Stack scalable applications. Transforming complex problem spaces into robust, deployable intelligent systems.
+                </p>
+
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <a href="#projects" class="pulse-glow shimmer-cta px-6 py-3 rounded-lg font-medium bg-gradient-to-r from-cyan-500 via-blue-600 to-fuchsia-500 text-white shadow-lg shadow-cyan-500/25 hover:opacity-95 transition-all flex items-center space-x-2">
+                        <span>Explore Projects</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                    <a href="mailto:nithint236@gmail.com" class="px-6 py-3 rounded-lg font-medium bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-200 transition-all flex items-center space-x-2">
+                        <i data-lucide="mail" class="w-4 h-4 text-cyan-400"></i>
+                        <span>Contact Me</span>
+                    </a>
+                </div>
+
+                <!-- Fast Contact Links -->
+                <div class="flex items-center space-x-6 pt-6 text-gray-400">
+                    <a href="https://github.com/tnithin236" target="_blank" class="hover:text-cyan-400 transition-colors flex items-center space-x-1 text-sm">
+                        <i data-lucide="github" class="w-5 h-5"></i>
+                        <span>GitHub</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/nithin-t-59b58727b/" target="_blank" class="hover:text-cyan-400 transition-colors flex items-center space-x-1 text-sm">
+                        <i data-lucide="linkedin" class="w-5 h-5"></i>
+                        <span>LinkedIn</span>
+                    </a>
+                    <span class="flex items-center space-x-1 text-sm text-gray-500">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-cyan-500"></i>
+                        <span>Coimbatore, Tamil Nadu</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Terminal / Code preview card -->
+            <div class="lg:col-span-5">
+                <div class="glow-card bg-cardBg border border-cardBorder rounded-xl overflow-hidden shadow-2xl">
+                    <div class="bg-gray-900/90 px-4 py-3 border-b border-gray-800 flex items-center justify-between">
+                        <div class="flex space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
+                        </div>
+                        <span class="text-xs font-mono text-gray-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>nithin_profile.py</span>
+                        <div class="w-10"></div>
+                    </div>
+                    <div class="p-6 font-mono text-sm leading-relaxed space-y-2 text-gray-300" id="terminal-code">
+                        <p><span class="text-pink-400">class</span> <span class="text-cyan-300">DataScientist</span>:</p>
+                        <p class="pl-4"><span class="text-pink-400">def</span> <span class="text-blue-400">__init__</span>(self):</p>
+                        <p class="pl-8 text-gray-400">self.name = <span class="text-yellow-300">"Nithin T"</span></p>
+                        <p class="pl-8 text-gray-400">self.focus = [<span class="text-yellow-300">"Computer Vision"</span>, <span class="text-yellow-300">"Deep Learning"</span>, <span class="text-yellow-300">"Full-Stack"</span>]</p>
+                        <p class="pl-8 text-gray-400">self.core_stack = [<span class="text-yellow-300">"PyTorch"</span>, <span class="text-yellow-300">"ASP.NET Core"</span>, <span class="text-yellow-300">"React"</span>, <span class="text-yellow-300">"SQL"</span>]</p>
+                        <p class="pl-8 text-gray-400">self.publication = <span class="text-yellow-300">"IJRASET (DOI: 10.22214/...)"</span></p>
+                        <p class="pl-4"><span class="text-pink-400">def</span> <span class="text-blue-400">mission</span>(self):</p>
+                        <p class="pl-8 text-cyan-400">return <span class="text-yellow-300">"Build explainable, high-impact AI systems."</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Metrics Ribbon -->
+    <section class="border-y border-gray-800 bg-gray-900/40 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+                <div class="text-3xl font-extrabold text-cyan-400 font-mono metric-glow">89.68%</div>
+                <div class="text-sm text-gray-400 mt-1">MRI Model Accuracy (ResNet50V2)</div>
+            </div>
+            <div>
+                <div class="text-3xl font-extrabold text-blue-400 font-mono metric-glow">11 Entities</div>
+                <div class="text-sm text-gray-400 mt-1">Full-Stack Enterprise Architecture</div>
+            </div>
+            <div>
+                <div class="text-3xl font-extrabold text-fuchsia-400 font-mono metric-glow">1 Paper</div>
+                <div class="text-sm text-gray-400 mt-1">Published Research in IJRASET</div>
+            </div>
+            <div>
+                <div class="text-3xl font-extrabold text-emerald-400 font-mono metric-glow">7.44 CGPA</div>
+                <div class="text-sm text-gray-400 mt-1">B.Tech in AI & Data Science</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="flex items-center space-x-3 mb-12">
+            <span class="text-cyan-400 font-mono text-sm eyebrow-glow">01.</span>
+            <h2 class="text-3xl font-bold text-white">About Me</h2>
+            <div class="neon-divider flex-grow max-w-md ml-4 opacity-60"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            <div class="lg:col-span-7 space-y-4 text-gray-300 leading-relaxed">
+                <p>
+                    I am an Artificial Intelligence and Data Science undergraduate at <strong>United Institute of Technology</strong>, Tamil Nadu. My passion lies at the intersection of deep visual learning, data analytics, and scalable web engineering.
+                </p>
+                <p>
+                    I have demonstrated industry experience deploying real-time safety models in construction environments, constructing automated license plate recognition systems, and building full-featured transactional hospital management platforms complete with role-based JWT security and containerized deployments.
+                </p>
+                <p>
+                    In addition to engineering applications, I am committed to research rigor—having published a multi-class brain tumor classification framework utilizing <strong>ResNet50V2</strong> and <strong>Grad-CAM explainability</strong>.
+                </p>
+            </div>
+
+            <div class="lg:col-span-5 bg-cardBg border border-cardBorder p-6 rounded-xl space-y-4">
+                <h3 class="text-lg font-semibold text-white flex items-center space-x-2">
+                    <i data-lucide="award" class="w-5 h-5 text-cyan-400"></i>
+                    <span>Highlights & Leadership</span>
+                </h3>
+                <ul class="space-y-3 text-sm text-gray-300">
+                    <li class="flex items-start space-x-2">
+                        <span class="text-cyan-400 mt-1">•</span>
+                        <span><strong>Vice President:</strong> Rotaract Club of United Institute of Technology (2024–2025)</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-cyan-400 mt-1">•</span>
+                        <span><strong>Active Member:</strong> Rotaract Club of R.S. Puram, Coimbatore (2025–Present)</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-cyan-400 mt-1">•</span>
+                        <span><strong>Presenter:</strong> International Conference on Innovative Research in Engineering Sciences (2025)</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-gray-800/60">
+        <div class="flex items-center space-x-3 mb-12">
+            <span class="text-cyan-400 font-mono text-sm eyebrow-glow">02.</span>
+            <h2 class="text-3xl font-bold text-white">Education</h2>
+            <div class="neon-divider flex-grow max-w-md ml-4 opacity-60"></div>
+        </div>
+
+        <div class="relative border-l border-gray-800 ml-4 space-y-12">
+            <!-- Education Item 1 -->
+            <div class="relative pl-8">
+                <div class="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-cyan-500 text-cyan-500 border-4 border-darkBg timeline-dot"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                    <h3 class="text-xl font-bold text-white">B.Tech in Artificial Intelligence and Data Science</h3>
+                    <span class="text-xs font-mono text-cyan-400">2022 – 2026</span>
+                </div>
+                <div class="text-gray-400 text-sm font-medium mb-3">United Institute of Technology, Tamil Nadu</div>
+                <p class="text-gray-300 text-sm leading-relaxed max-w-3xl">CGPA: 7.44</p>
+            </div>
+
+            <!-- Education Item 2 -->
+            <div class="relative pl-8">
+                <div class="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-blue-500 text-blue-500 border-4 border-darkBg timeline-dot"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                    <h3 class="text-xl font-bold text-white">Higher Secondary (HSC)</h3>
+                    <span class="text-xs font-mono text-blue-400">2020 – 2022</span>
+                </div>
+                <div class="text-gray-400 text-sm font-medium mb-3">R.K. Sreerangammal Kalvi Nilayam, Coimbatore</div>
+                <p class="text-gray-300 text-sm leading-relaxed max-w-3xl">Score: 76%</p>
+            </div>
+
+            <!-- Education Item 3 -->
+            <div class="relative pl-8">
+                <div class="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-purple-500 text-purple-500 border-4 border-darkBg timeline-dot"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                    <h3 class="text-xl font-bold text-white">SSLC</h3>
+                    <span class="text-xs font-mono text-purple-400">2019 – 2020</span>
+                </div>
+                <div class="text-gray-400 text-sm font-medium mb-3">Kikani Vidhya Mandir, Coimbatore</div>
+                <p class="text-gray-300 text-sm leading-relaxed max-w-3xl">Score: 74%</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Skills Section -->
+    <section id="skills" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-gray-800/60">
+        <div class="flex items-center space-x-3 mb-12">
+            <span class="text-cyan-400 font-mono text-sm eyebrow-glow">03.</span>
+            <h2 class="text-3xl font-bold text-white">Technical Arsenal</h2>
+            <div class="neon-divider flex-grow max-w-md ml-4 opacity-60"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Card 1: AI & ML -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-6 glow-card transition-all">
+                <div class="w-12 h-12 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4">
+                    <i data-lucide="brain-circuit" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-3">AI & Deep Learning</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">TensorFlow</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Scikit-learn</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Regression Analysis</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">CNNs</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">ResNet50V2</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Grad-CAM</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Generative AI</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Retrieval-Augmented Generation (RAG)</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Gemini API</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">FastAPI</span>
+                </div>
+            </div>
+
+            <!-- Card 2: Computer Vision -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-6 glow-card transition-all">
+                <div class="w-12 h-12 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-4">
+                    <i data-lucide="eye" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-3">Computer Vision</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">YOLO</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">DETR</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">OpenCV</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">OCR</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Object Detection</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Roboflow</span>
+                </div>
+            </div>
+
+            <!-- Card 3: Full-Stack & Backend -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-6 glow-card transition-all">
+                <div class="w-12 h-12 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-4">
+                    <i data-lucide="code" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-3">Web & Backend</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">ASP.NET Core</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">C#</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">React.js</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">EF Core</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">REST APIs</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">JWT Security</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Bootstrap</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Axios</span>
+                </div>
+            </div>
+
+            <!-- Card 4: Databases & Cloud -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-6 glow-card transition-all">
+                <div class="w-12 h-12 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4">
+                    <i data-lucide="database" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-3">Databases & Cloud</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">PostgreSQL</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Oracle SQL</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Pinecone Vector DB</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Docker</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Render / Vercel / Neon</span>
+                </div>
+            </div>
+
+            <!-- Card 5: Business Intelligence -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-6 glow-card transition-all">
+                <div class="w-12 h-12 rounded-lg bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 mb-4">
+                    <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-3">Data & Business Intelligence</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Power BI</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">DAX</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Pandas</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">NumPy</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Advanced Excel</span>
+                </div>
+            </div>
+
+            <!-- Card 6: Languages & Tools -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-6 glow-card transition-all">
+                <div class="w-12 h-12 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 mb-4">
+                    <i data-lucide="terminal" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-3">Programming & Tooling</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Python</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">C#</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">JavaScript</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Git / GitHub</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Postman</span>
+                    <span class="skill-tag px-2.5 py-1 text-xs font-mono rounded-md bg-gray-800 text-gray-300 border border-gray-700 hover:border-cyan-400 hover:text-white hover:bg-gray-700">Claude AI</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-gray-800/60">
+        <div class="flex items-center space-x-3 mb-12">
+            <span class="text-cyan-400 font-mono text-sm eyebrow-glow">04.</span>
+            <h2 class="text-3xl font-bold text-white">Featured Projects</h2>
+            <div class="neon-divider flex-grow max-w-md ml-4 opacity-60"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Project 1: Brain Tumor -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-8 flex flex-col justify-between glow-card transition-all">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-mono bg-cyan-950 text-cyan-400 border border-cyan-800">Published Research Project</span>
+                        <span class="text-xs font-mono text-gray-500">2025 – 2026</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Brain Tumor MRI Multi-Class Classification</h3>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">
+                        Proposed a two-phase transfer learning framework using ResNet50V2 for four-class MRI classification (glioma, meningioma, pituitary, normal). Validated against radiologist annotations using Grad-CAM explainability.
+                    </p>
+                    <div class="bg-gray-900/80 rounded-lg p-4 mb-6 border border-gray-800">
+                        <div class="text-xs font-mono text-cyan-300 space-y-1">
+                            <div>• Accuracy: <strong class="text-white">89.68%</strong> | Macro-AUC: <strong class="text-white">0.9820</strong></div>
+                            <div>• Published: <span class="text-gray-300">IJRASET Vol 14, Issue IV</span></div>
+                            <div>• DOI: <span class="text-gray-400">10.22214/ijraset.2026.79816</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-800/60">
+                        <span class="text-xs font-mono text-gray-400">#ResNet50V2</span>
+                        <span class="text-xs font-mono text-gray-400">#TensorFlow</span>
+                        <span class="text-xs font-mono text-gray-400">#Grad-CAM</span>
+                        <span class="text-xs font-mono text-gray-400">#OpenCV</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 2: Hospital Management -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-8 flex flex-col justify-between glow-card transition-all">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-mono bg-purple-950 text-purple-400 border border-purple-800">Full-Stack Enterprise</span>
+                        <span class="text-xs font-mono text-gray-500">2026</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Full-Stack Hospital Management System</h3>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">
+                        An enterprise health platform spanning 11 relational entities with automated stock deductions and billing workflows. Secured via strict JWT-based role authorization (Admin, Doctor, Staff, Receptionist).
+                    </p>
+                    <div class="bg-gray-900/80 rounded-lg p-4 mb-6 border border-gray-800">
+                        <div class="text-xs font-mono text-purple-300 space-y-1">
+                            <div>• Architecture: <span class="text-gray-300">REST API + EF Core + React Frontend</span></div>
+                            <div>• Deployed: <span class="text-gray-300">Docker container on Render & Vercel</span></div>
+                            <div>• Storage: <span class="text-gray-300">Neon Cloud Serverless PostgreSQL</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-800/60">
+                        <span class="text-xs font-mono text-gray-400">#ASP.NET Core</span>
+                        <span class="text-xs font-mono text-gray-400">#React</span>
+                        <span class="text-xs font-mono text-gray-400">#PostgreSQL</span>
+                        <span class="text-xs font-mono text-gray-400">#Docker</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 3: PPE Detection -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-8 flex flex-col justify-between glow-card transition-all">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-mono bg-blue-950 text-blue-400 border border-blue-800">Computer Vision</span>
+                        <span class="text-xs font-mono text-gray-500">2025</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Construction PPE Detection System</h3>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">
+                        Engineered automated violation detection for safety equipment in live construction sites. Developed an analytics dashboard for site safety compliance tracking.
+                    </p>
+                    <div class="bg-gray-900/80 rounded-lg p-4 mb-6 border border-gray-800">
+                        <div class="text-xs font-mono text-blue-300 space-y-1">
+                            <div>• Performance: <strong class="text-white">92% Real-World Accuracy</strong></div>
+                            <div>• Features: <span class="text-gray-300">Real-time alert engine & trends dashboard</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-800/60">
+                        <span class="text-xs font-mono text-gray-400">#YOLO</span>
+                        <span class="text-xs font-mono text-gray-400">#DETR</span>
+                        <span class="text-xs font-mono text-gray-400">#OpenCV</span>
+                        <span class="text-xs font-mono text-gray-400">#SafetyAnalytics</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 4: Vehicle Plate Detection -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-8 flex flex-col justify-between glow-card transition-all">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-mono bg-emerald-950 text-emerald-400 border border-emerald-800">Vision & OCR</span>
+                        <span class="text-xs font-mono text-gray-500">2025</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Vehicle Number Plate Detection System</h3>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">
+                        Constructed an automated license plate recognition pipeline using DETR and OpenCV, optimized for challenging lighting and angled perspective scenarios.
+                    </p>
+                    <div class="bg-gray-900/80 rounded-lg p-4 mb-6 border border-gray-800">
+                        <div class="text-xs font-mono text-emerald-300 space-y-1">
+                            <div>• Features: <span class="text-gray-300">Custom augmentation & high-speed OCR pipeline</span></div>
+                            <div>• Target: <span class="text-gray-300">Diverse vehicular types and plate formats</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-800/60">
+                        <span class="text-xs font-mono text-gray-400">#DETR</span>
+                        <span class="text-xs font-mono text-gray-400">#OpenCV</span>
+                        <span class="text-xs font-mono text-gray-400">#OCR</span>
+                        <span class="text-xs font-mono text-gray-400">#Augmentation</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 5: RAG Knowledge Assistant -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-8 flex flex-col justify-between glow-card transition-all">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-mono bg-pink-950 text-pink-400 border border-pink-800">Generative AI / RAG</span>
+                        <span class="text-xs font-mono text-gray-500">2026</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">RAG Knowledge Assistant</h3>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">
+                        A full-stack Retrieval-Augmented Generation app that lets users upload PDF/DOCX/TXT documents and ask natural-language questions, with a modular FastAPI pipeline for text extraction, chunking, and embedding generation.
+                    </p>
+                    <div class="bg-gray-900/80 rounded-lg p-4 mb-6 border border-gray-800">
+                        <div class="text-xs font-mono text-pink-300 space-y-1">
+                            <div>• Search: <span class="text-gray-300">Pinecone semantic search + similarity-threshold gating</span></div>
+                            <div>• Trust: <span class="text-gray-300">Source citations (doc, page, score) on every answer</span></div>
+                            <div>• Frontend: <span class="text-gray-300">React with persistent chat history (PostgreSQL)</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-800/60">
+                        <span class="text-xs font-mono text-gray-400">#FastAPI</span>
+                        <span class="text-xs font-mono text-gray-400">#Pinecone</span>
+                        <span class="text-xs font-mono text-gray-400">#GeminiAPI</span>
+                        <span class="text-xs font-mono text-gray-400">#React</span>
+                        <span class="text-xs font-mono text-gray-400">#Docker</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 6: Medical Insurance Cost Prediction -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-8 flex flex-col justify-between glow-card transition-all">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-mono bg-amber-950 text-amber-400 border border-amber-800">Machine Learning</span>
+                        <span class="text-xs font-mono text-gray-500">2025</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Medical Insurance Cost Prediction</h3>
+                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">
+                        A regression-based machine learning model that estimates medical insurance charges from demographic and health attributes such as age, BMI, smoking status, and region.
+                    </p>
+                    <div class="bg-gray-900/80 rounded-lg p-4 mb-6 border border-gray-800">
+                        <div class="text-xs font-mono text-amber-300 space-y-1">
+                            <div>• Type: <span class="text-gray-300">Supervised regression on tabular health data</span></div>
+                            <div>• Repo: <a href="https://github.com/tnithin236/Medical-Insurance-Cost-Prediction" target="_blank" class="text-amber-300 hover:underline">github.com/tnithin236/Medical-Insurance-Cost-Prediction</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-800/60">
+                        <span class="text-xs font-mono text-gray-400">#Python</span>
+                        <span class="text-xs font-mono text-gray-400">#Regression</span>
+                        <span class="text-xs font-mono text-gray-400">#Pandas</span>
+                        <span class="text-xs font-mono text-gray-400">#Scikit-learn</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Timeline Section -->
+    <section id="experience" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-gray-800/60">
+        <div class="flex items-center space-x-3 mb-12">
+            <span class="text-cyan-400 font-mono text-sm eyebrow-glow">05.</span>
+            <h2 class="text-3xl font-bold text-white">Experience & Training</h2>
+            <div class="neon-divider flex-grow max-w-md ml-4 opacity-60"></div>
+        </div>
+
+        <div class="relative border-l border-gray-800 ml-4 space-y-12">
+            <!-- Experience Item 1 -->
+            <div class="relative pl-8">
+                <div class="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-cyan-500 text-cyan-500 border-4 border-darkBg timeline-dot"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                    <h3 class="text-xl font-bold text-white">Data Science Trainee</h3>
+                    <span class="text-xs font-mono text-cyan-400">Feb 2026 – Aug 2026</span>
+                </div>
+                <div class="text-gray-400 text-sm font-medium mb-3">Q Spiders</div>
+                <p class="text-gray-300 text-sm leading-relaxed max-w-3xl">
+                    Completed an intensive 6-month program mastering Oracle SQL querying, database design, Python analytical libraries (Pandas, NumPy), and Power BI enterprise dashboard modeling.
+                </p>
+            </div>
+
+            <!-- Experience Item 2 -->
+            <div class="relative pl-8">
+                <div class="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-blue-500 text-blue-500 border-4 border-darkBg timeline-dot"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                    <h3 class="text-xl font-bold text-white">AI / ML Intern</h3>
+                    <span class="text-xs font-mono text-blue-400">Jun 2025 – Aug 2025</span>
+                </div>
+                <div class="text-gray-400 text-sm font-medium mb-3">Neuronest AI Pvt Ltd</div>
+                <p class="text-gray-300 text-sm leading-relaxed max-w-3xl">
+                    Designed and deployed real-time computer vision models for safety violation and PPE detection utilizing YOLO, DETR, and OpenCV in live monitoring ecosystems.
+                </p>
+            </div>
+
+            <!-- Experience Item 3 -->
+            <div class="relative pl-8">
+                <div class="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-purple-500 text-purple-500 border-4 border-darkBg timeline-dot"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                    <h3 class="text-xl font-bold text-white">Data Science Intern</h3>
+                    <span class="text-xs font-mono text-purple-400">May 2025 – Jul 2025</span>
+                </div>
+                <div class="text-gray-400 text-sm font-medium mb-3">UptoSkills</div>
+                <p class="text-gray-300 text-sm leading-relaxed max-w-3xl">
+                    Transformed and analyzed complex business data sets to empower recruitment strategy. Engineered executive-facing Power BI dashboards and automated reporting workflows.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Publications & Certifications -->
+    <section id="publications" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-gray-800/60">
+        <div class="flex items-center space-x-3 mb-12">
+            <span class="text-cyan-400 font-mono text-sm eyebrow-glow">06.</span>
+            <h2 class="text-3xl font-bold text-white">Research & Credentials</h2>
+            <div class="neon-divider flex-grow max-w-md ml-4 opacity-60"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Paper -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-6">
+                <h3 class="text-lg font-bold text-white flex items-center space-x-2 mb-4">
+                    <i data-lucide="book-open" class="w-5 h-5 text-cyan-400"></i>
+                    <span>Published Research</span>
+                </h3>
+                <div class="space-y-4">
+                    <div class="p-4 bg-gray-900/60 rounded-lg border border-gray-800">
+                        <h4 class="font-semibold text-white text-sm">Multi-Class Brain Tumor Classification from MRI Using ResNet50V2 Transfer Learning with Two-Stage Augmentation, Grad-CAM Explainability, and Cross-Dataset Validation</h4>
+                        <p class="text-xs text-gray-400 mt-2">IJRASET • Vol 14, Issue IV, April 2026</p>
+                        <a href="https://doi.org/10.22214/ijraset.2026.79816" target="_blank" class="text-xs text-cyan-400 hover:underline mt-2 inline-block font-mono">DOI: 10.22214/ijraset.2026.79816 →</a>
+                    </div>
+                    <div class="p-4 bg-gray-900/60 rounded-lg border border-gray-800">
+                        <h4 class="font-semibold text-white text-sm">Neural Network Compression (Conference Presentation)</h4>
+                        <p class="text-xs text-gray-400 mt-1">International Conference on Innovative Research in Engineering Sciences (2025)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certifications -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-6">
+                <h3 class="text-lg font-bold text-white flex items-center space-x-2 mb-4">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-cyan-400"></i>
+                    <span>Certifications</span>
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between text-sm p-3 bg-gray-900/40 rounded-lg border border-gray-800/80">
+                        <span class="text-gray-200">Python for Data Science</span>
+                        <span class="text-xs font-mono text-cyan-400">NPTEL (IITs & IISc)</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm p-3 bg-gray-900/40 rounded-lg border border-gray-800/80">
+                        <span class="text-gray-200">Data Analytics Using Power BI</span>
+                        <span class="text-xs font-mono text-cyan-400">LetsUpgrade</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm p-3 bg-gray-900/40 rounded-lg border border-gray-800/80">
+                        <span class="text-gray-200">Data Science Foundations</span>
+                        <span class="text-xs font-mono text-cyan-400">Great Learning</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm p-3 bg-gray-900/40 rounded-lg border border-gray-800/80">
+                        <span class="text-gray-200">Generative AI</span>
+                        <span class="text-xs font-mono text-cyan-400">LinkedIn Learning</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm p-3 bg-gray-900/40 rounded-lg border border-gray-800/80">
+                        <span class="text-gray-200">Data Visualization</span>
+                        <span class="text-xs font-mono text-cyan-400">TATA Corp (Forage)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-t border-gray-800/60">
+        <div class="space-y-6">
+            <span class="text-cyan-400 font-mono text-sm eyebrow-glow">07. What's Next?</span>
+            <h2 class="text-4xl font-extrabold text-white tracking-tight">Get In Touch</h2>
+            <p class="text-gray-400 max-w-xl mx-auto text-base leading-relaxed">
+                I am currently actively open to full-time roles, internships, and research collaborations in AI, Machine Learning, Data Analytics, and Full-Stack Engineering.
+            </p>
+
+            <div class="pt-6 flex flex-wrap justify-center gap-4">
+                <a href="mailto:nithint236@gmail.com" class="shimmer-cta px-8 py-4 rounded-xl font-medium bg-gradient-to-r from-cyan-500 via-blue-600 to-fuchsia-500 text-white shadow-xl shadow-cyan-500/20 hover:opacity-95 transition-all flex items-center space-x-2">
+                    <i data-lucide="mail" class="w-5 h-5"></i>
+                    <span>Say Hello: nithint236@gmail.com</span>
+                </a>
+            </div>
+
+            <div class="flex justify-center space-x-8 pt-8 text-gray-400">
+                <a href="https://github.com/tnithin236" target="_blank" class="hover:text-cyan-400 transition-colors">GitHub</a>
+                <a href="https://www.linkedin.com/in/nithin-t-59b58727b/" target="_blank" class="hover:text-cyan-400 transition-colors">LinkedIn</a>
+                <a href="tel:6380144282" class="hover:text-cyan-400 transition-colors">+91 6380144282</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-gray-900 text-center text-xs text-gray-500 font-mono">
+        <p>© 2026 Nithin T. Designed & Built for AI & Data Science Engineering.</p>
+    </footer>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+
+        // Cursor-reactive spotlight glow
+        const cursorGlow = document.getElementById('cursor-glow');
+        window.addEventListener('pointermove', (e) => {
+            cursorGlow.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+        }, { passive: true });
+
+        // Animated particle network — tech circuit feel
+        (function initParticleNetwork() {
+            const canvas = document.getElementById('particle-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width, height, particles;
+            const COLORS = ['rgba(6,182,212,', 'rgba(139,92,246,', 'rgba(255,47,179,', 'rgba(57,255,136,'];
+            const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            function makeParticles() {
+                const count = Math.min(70, Math.floor((width * height) / 22000));
+                particles = Array.from({ length: count }, () => ({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.35,
+                    vy: (Math.random() - 0.5) * 0.35,
+                    r: Math.random() * 1.6 + 0.6,
+                    color: COLORS[Math.floor(Math.random() * COLORS.length)]
+                }));
+            }
+            function step() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color + '0.9)';
+                    ctx.fill();
+                });
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const a = particles[i], b = particles[j];
+                        const dx = a.x - b.x, dy = a.y - b.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 130) {
+                            ctx.beginPath();
+                            ctx.moveTo(a.x, a.y);
+                            ctx.lineTo(b.x, b.y);
+                            ctx.strokeStyle = a.color + (0.16 * (1 - dist / 130)) + ')';
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                if (!prefersReduced) requestAnimationFrame(step);
+            }
+            resize();
+            makeParticles();
+            step();
+            if (prefersReduced) { ctx.clearRect(0, 0, width, height); }
+            window.addEventListener('resize', () => { resize(); makeParticles(); }, { passive: true });
+        })();
+
+        // Scroll progress bar
+        const progressBar = document.getElementById('scroll-progress');
+        function updateProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressBar.style.width = pct + '%';
+        }
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        updateProgress();
+
+        // Auto-tag reveal targets: cards, timeline items, list rows
+        const revealSelectors = [
+            '.glow-card',
+            '.relative.pl-8',
+            '#about .lg\\:col-span-5',
+            '#publications .bg-cardBg',
+            '.pulse-glow'
+        ];
+        const revealEls = document.querySelectorAll(revealSelectors.join(','));
+        revealEls.forEach((el, i) => {
+            el.classList.add('reveal');
+            el.style.transitionDelay = (i % 6) * 70 + 'ms';
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+        revealEls.forEach(el => observer.observe(el));
+
+        // Count-up animation for the metrics ribbon
+        function animateCountUp(el) {
+            const text = el.textContent.trim();
+            const match = text.match(/^([\d.]+)(.*)$/);
+            if (!match) return;
+            const target = parseFloat(match[1]);
+            const suffix = match[2];
+            const isFloat = match[1].includes('.');
+            const duration = 1400;
+            const start = performance.now();
+            function tick(now) {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = target * eased;
+                el.textContent = (isFloat ? current.toFixed(2) : Math.round(current)) + suffix;
+                if (progress < 1) requestAnimationFrame(tick);
+                else el.textContent = text;
+            }
+            requestAnimationFrame(tick);
+        }
+        const metricEls = document.querySelectorAll('#about, section');
+        const metricNumbers = document.querySelectorAll('.font-extrabold.font-mono');
+        const metricObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCountUp(entry.target);
+                    metricObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        metricNumbers.forEach(el => metricObserver.observe(el));
+
+        // Typing effect for the terminal code preview
+        const codeBlock = document.getElementById('terminal-code');
+        if (codeBlock) {
+            const originalHTML = codeBlock.innerHTML;
+            const lines = Array.from(codeBlock.children);
+            lines.forEach(line => line.style.visibility = 'hidden');
+            const termObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        lines.forEach((line, i) => {
+                            setTimeout(() => {
+                                line.style.visibility = 'visible';
+                                line.style.opacity = '0';
+                                line.style.transform = 'translateX(-8px)';
+                                line.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                                requestAnimationFrame(() => {
+                                    line.style.opacity = '1';
+                                    line.style.transform = 'translateX(0)';
+                                });
+                            }, i * 220);
+                        });
+                        termObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.4 });
+            termObserver.observe(codeBlock);
+        }
+    </script>
+</body>
+</html>
