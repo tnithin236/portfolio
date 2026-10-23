@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nithin T | AI & Data Science Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#06070F',
+                        void2: '#0A0C1C',
+                        card: '#0E1026',
+                        cardBorder: '#262148',
+                        arcane: '#8B5CF6',
+                        arcaneBright: '#B794F6',
+                        cyan: '#22D3EE',
+                        gold: '#F2C464',
+                        ink: '#E8E5FF',
+                        inkDim: '#9691C4',
+                        inkFaint: '#5B567F'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Cinzel', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & Lucide Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --void: #06070F;
+            --void2: #0A0C1C;
+            --card: #0E1026;
+            --card-border: #262148;
+            --arcane: #8B5CF6;
+            --arcane-bright: #B794F6;
+            --cyan: #22D3EE;
+            --gold: #F2C464;
+            --ink: #E8E5FF;
+            --ink-dim: #9691C4;
+            --ink-faint: #5B567F;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--void);
+            color: var(--ink);
+        }
+
+        h1, h2, h3 { font-family: 'Cinzel', serif; letter-spacing: 0.01em; }
+
+        .glyph { font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em; }
+
+        .gradient-text {
+            background: linear-gradient(100deg, var(--arcane-bright) 0%, var(--cyan) 72%, #FF4FA3 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Faint circuit-rune backdrop */
+        body {
+            background-image:
+                radial-gradient(circle at 15% 8%, rgba(139,92,246,0.10), transparent 40%),
+                radial-gradient(circle at 85% 0%, rgba(34,211,238,0.08), transparent 45%),
+                radial-gradient(circle at 50% 100%, rgba(255,79,163,0.025), transparent 48%);
+        }
+
+        /* Panel / card treatment: notched corners, glowing hairline border */
+        .panel {
+            background: linear-gradient(180deg, rgba(139,92,246,0.05), rgba(255,255,255,0) 40%), var(--card);
+            border: 1px solid var(--card-border);
+            clip-path: polygon(0 14px, 14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+            position: relative;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .panel:hover {
+            transform: translateY(-3px);
+            border-color: rgba(139,92,246,0.55);
+            box-shadow: 0 0 0 1px rgba(139,92,246,0.15), 0 20px 40px -20px rgba(139,92,246,0.35);
+        }
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 14px; height: 14px;
+            background: linear-gradient(135deg, var(--arcane), var(--cyan));
+            clip-path: polygon(100% 0, 0 0, 100% 100%);
+            opacity: 0.85;
+        }
+
+        /* Rune sigil badge (section markers) */
+        .sigil {
+            width: 44px; height: 44px;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+            color: var(--arcane-bright);
+        }
+        .sigil svg.ring {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+        }
+
+        /* Buttons */
+        .btn-arcane {
+            background: linear-gradient(100deg, var(--arcane) 0%, #6D5BD0 60%, var(--cyan) 130%);
+            box-shadow: 0 0 0 1px rgba(183,148,246,0.3), 0 12px 30px -10px rgba(139,92,246,0.55);
+        }
+        .btn-arcane:hover { filter: brightness(1.1); }
+
+        /* Skill tag */
+        .rune-tag {
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+            border: 1px solid var(--card-border);
+            background: rgba(255,255,255,0.02);
+        }
+        .rune-tag:hover {
+            transform: translateY(-2px);
+            border-color: var(--cyan);
+            color: #fff;
+            box-shadow: 0 0 12px -2px rgba(34,211,238,0.6);
+        }
+
+        /* Scroll reveal */
+        /* Scroll reveals: content glides in from alternating sides toward the center */
+        .reveal { opacity: 0; filter: blur(5px); transform: translate3d(-76px, 24px, 0) scale(.975); transition: opacity 1.7s cubic-bezier(.22,1,.36,1), transform 1.7s cubic-bezier(.22,1,.36,1), filter 1.35s ease; will-change: opacity, transform, filter; }
+        .reveal.from-right { transform: translate3d(76px, 24px, 0) scale(.975); }
+        .reveal.from-center { transform: translate3d(0, 32px, 0) scale(.97); }
+        /* Featured project cards must enter FROM THE SIDES and settle toward the center. */
+        #projects-grid .reveal.project-from-left { transform: translate3d(-180px, 18px, 0) scale(.975); }
+        #projects-grid .reveal.project-from-right { transform: translate3d(180px, 18px, 0) scale(.975); }
+        #projects-grid .reveal.project-from-left.is-visible,
+        #projects-grid .reveal.project-from-right.is-visible { transform: translate3d(0, 0, 0) scale(1); }
+        /* Project cards need their reveal transition to win over the panel hover transition. */
+        #projects-grid .panel.reveal { transition: opacity 1.85s cubic-bezier(.22,1,.36,1), transform 1.85s cubic-bezier(.22,1,.36,1), filter 1.4s ease, border-color .55s ease, box-shadow .55s ease; }
+        #projects-grid .panel.reveal.is-visible { opacity: 1; filter: blur(0); }
+        .reveal.is-visible { opacity: 1; filter: blur(0); transform: translate3d(0, 0, 0) scale(1); }
+        .reveal.glide-left { transform: translate3d(-110px, 18px, 0) scale(.98); }
+        .reveal.glide-right { transform: translate3d(110px, 18px, 0) scale(.98); }
+        .reveal.glide-left.is-visible,
+        .reveal.glide-right.is-visible { opacity: 1; filter: blur(0); transform: translate3d(0, 0, 0) scale(1); }
+        /* Keep these content-heavy sections as smooth as the featured project cards. */
+        #skills .panel.reveal,
+        #shipping .panel.reveal,
+        #publications .panel.reveal {
+            transition: opacity 1.85s cubic-bezier(.22,1,.36,1),
+                        transform 1.85s cubic-bezier(.22,1,.36,1),
+                        filter 1.4s ease,
+                        border-color .55s ease,
+                        box-shadow .55s ease;
+        }
+        #skills .panel.reveal.is-visible,
+        #shipping .panel.reveal.is-visible,
+        #publications .panel.reveal.is-visible { opacity: 1; filter: blur(0); }
+        /* A restrained neon sheen: mostly purple, with cyan/pink visible on interaction. */
+        .panel, .grimoire, #contact form, .rune-tag { position: relative; isolation: isolate; }
+        .panel { transition: border-color .55s ease, box-shadow .55s ease, transform .55s cubic-bezier(.2,.8,.2,1); }
+        .panel::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1; opacity: 0; background: linear-gradient(115deg, transparent 10%, rgba(34,211,238,.075) 42%, rgba(255,22,140,.085) 58%, transparent 86%); background-size: 220% 100%; transition: opacity .55s ease; }
+        .panel:hover { border-color: rgba(34,211,238,.45); box-shadow: 0 12px 34px rgba(8,8,20,.24), 0 0 22px rgba(139,92,246,.13); transform: translateY(-4px); }
+        .panel:hover::after { opacity: 1; animation: panelSheen 1.2s ease both; }
+        @keyframes panelSheen { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+        /* Section titles gently rise into view with a moving accent underline. */
+        .section-heading { position: relative; width: fit-content; }
+        .section-heading::after { content: ''; position: absolute; left: 0; bottom: -9px; width: 42%; height: 2px; border-radius: 99px; background: linear-gradient(90deg, var(--arcane), var(--cyan), #FF168C); transform-origin: left; transform: scaleX(.35); opacity: .65; transition: transform .7s cubic-bezier(.16,1,.3,1), opacity .7s ease; }
+        .section-heading.is-visible::after { transform: scaleX(1); opacity: .95; }
+        .timeline-dot { animation: dotPulse 3.8s ease-in-out infinite; }
+        @keyframes dotPulse { 0%,100% { box-shadow: 0 0 0 4px rgba(139,92,246,.12), 0 0 10px rgba(139,92,246,.32); } 50% { box-shadow: 0 0 0 6px rgba(34,211,238,.08), 0 0 17px rgba(139,92,246,.48); } }
+        @media (prefers-reduced-motion: reduce) { .reveal, .reveal.from-right, .reveal.from-center, #projects-grid .reveal.project-from-left, #projects-grid .reveal.project-from-right { opacity: 1; filter: none; transform: none; transition: none; } .panel, .panel:hover { transition: none; transform: none; } .timeline-dot { animation: none; } }
+
+        /* Scroll progress bar */
+        #scroll-progress {
+            position: fixed; top: 0; left: 0; height: 2px; width: 0%;
+            background: linear-gradient(90deg, var(--arcane), var(--cyan), #FF4FA3);
+            z-index: 60; transition: width 0.1s ease-out;
+            box-shadow: 0 0 8px rgba(139,92,246,0.8);
+        }
+
+        /* Timeline dot: glowing orb */
+        .timeline-dot {
+            box-shadow: 0 0 0 4px rgba(139,92,246,0.15), 0 0 14px 2px rgba(139,92,246,0.55);
+        }
+
+        /* Terminal glow */
+        .grimoire {
+            box-shadow: 0 0 60px -20px rgba(139,92,246,0.45);
+        }
+        .grimoire-scanline {
+            position: absolute; left: 0; right: 0; top: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            animation: scan 4.5s linear infinite;
+        }
+        @keyframes scan {
+            0% { transform: translateY(0); opacity: 0.9; }
+            95% { opacity: 0.9; }
+            100% { transform: translateY(280px); opacity: 0; }
+        }
+
+        .type-cursor::after {
+            content: '▌';
+            color: var(--cyan);
+            animation: blinkCursor 1s step-end infinite;
+        }
+        @keyframes blinkCursor { 50% { opacity: 0; } }
+
+        #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+        .sigil-spin { animation: spin 40s linear infinite; transform-origin: center; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* GitHub contribution graph */
+        #gh-grid {
+            display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 12px);
+            grid-auto-columns: 12px; gap: 3px; width: max-content;
+        }
+        .gh-cell { width: 12px; height: 12px; border-radius: 3px; background: #1A1736; }
+        .gh-cell.l1 { background: #3B2A7A; }
+        .gh-cell.l2 { background: #5B3FBF; }
+        .gh-cell.l3 { background: #8B5CF6; }
+        .gh-cell.l4 { background: var(--cyan); box-shadow: 0 0 8px rgba(34,211,238,0.6); }
+        .gh-cell.pad { background: transparent; }
+
+        /* All-projects repo cards */
+        .repo-card {
+            background: var(--card); border: 1px solid var(--card-border); border-radius: 6px;
+            transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .repo-card:hover { border-color: rgba(139,92,246,0.6); transform: translateY(-2px); box-shadow: 0 12px 30px -18px rgba(139,92,246,0.6); }
+        .repo-card.is-hidden { display: none; }
+
+        /* Chat widget */
+        #chat-fab {
+            position: fixed; right: 20px; bottom: 20px; z-index: 70;
+            width: 56px; height: 56px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; cursor: pointer; border: 1px solid rgba(183,148,246,0.4);
+            background: linear-gradient(135deg, var(--arcane), #6D5BD0 60%, var(--cyan));
+            box-shadow: 0 0 24px rgba(139,92,246,0.55);
+        }
+        #chat-panel {
+            position: fixed; right: 20px; bottom: 88px; z-index: 70;
+            width: min(380px, calc(100vw - 40px)); height: min(520px, calc(100vh - 120px));
+            display: none; flex-direction: column;
+            background: var(--card); border: 1px solid var(--card-border);
+            box-shadow: 0 0 60px -15px rgba(139,92,246,0.5);
+            border-radius: 8px; overflow: hidden;
+        }
+        #chat-panel.open { display: flex; }
+        #chat-messages { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 85%; padding: 9px 12px; font-size: 14px; line-height: 1.5; border-radius: 6px; white-space: pre-wrap; }
+        .msg.bot { background: var(--void2); border: 1px solid var(--card-border); color: var(--ink); align-self: flex-start; }
+        .msg.bot p { margin: 0 0 .55em; }
+        .msg.bot p:last-child { margin-bottom: 0; }
+        .msg.bot ul { margin: .3em 0 .55em; padding-left: 1.2em; list-style: none; }
+        .msg.bot li { position: relative; margin: .35em 0; }
+        .msg.bot li::before { content: '\25C6'; position: absolute; left: -1.2em; top: .5em; font-size: .55em; color: var(--cyan); }
+        .msg.bot strong { color: #fff; font-weight: 600; }
+        .msg.user { background: linear-gradient(100deg, var(--arcane), #6D5BD0); color: #fff; align-self: flex-end; }
+        .chip { font-size: 12px; padding: 4px 10px; border: 1px solid var(--card-border); border-radius: 999px; color: var(--ink-dim); cursor: pointer; }
+        .chip:hover { border-color: var(--cyan); color: #fff; }
+
+        /* Subtle cyan + pink accents carried throughout the page */
+        .panel::before {
+            background: linear-gradient(135deg, var(--arcane) 0%, var(--cyan) 68%, #FF4FA3 100%);
+            opacity: 0.72;
+        }
+        .panel:hover {
+            border-color: rgba(34,211,238,0.30);
+            box-shadow: 0 0 0 1px rgba(34,211,238,0.05), 0 20px 40px -20px rgba(255,79,163,0.13);
+        }
+        .btn-arcane {
+            background: linear-gradient(100deg, var(--arcane) 0%, #6D5BD0 68%, rgba(255,79,163,0.78) 125%);
+            box-shadow: 0 0 0 1px rgba(183,148,246,0.25), 0 10px 28px -12px rgba(255,79,163,0.25);
+        }
+        .rune-tag:hover {
+            border-color: rgba(255,79,163,0.65);
+            box-shadow: 0 0 10px -4px rgba(255,79,163,0.48);
+        }
+        .sigil { filter: drop-shadow(0 0 5px rgba(34,211,238,0.13)); }
+        .timeline-dot {
+            box-shadow: 0 0 0 4px rgba(139,92,246,0.13), 0 0 12px 1px rgba(34,211,238,0.22);
+        }
+        .repo-card:hover {
+            border-color: rgba(255,79,163,0.42);
+            box-shadow: 0 12px 30px -18px rgba(34,211,238,0.28);
+        }
+        #scroll-progress { box-shadow: 0 0 7px rgba(34,211,238,0.28); }
+        #chat-fab {
+            background: linear-gradient(135deg, var(--arcane) 0%, #6D5BD0 72%, #D94CBA 120%);
+            box-shadow: 0 0 20px rgba(139,92,246,0.34), 0 0 18px -8px rgba(255,79,163,0.30);
+        }
+        #chat-panel { border-color: rgba(139,92,246,0.42); }
+        .chip:hover { border-color: rgba(255,79,163,0.65); }
+        ::selection { background: rgba(34,211,238,0.22); color: #fff; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+            }
+        }
+
+        /* Extra-small boost: a little more cyan/pink detail across the site */
+        .panel { border-color: rgba(87, 75, 145, 0.62); }
+        .panel::before { opacity: 0.88; }
+        .panel:hover { border-color: rgba(34,211,238,0.42); }
+        .gradient-text {
+            background-size: 160% 100%;
+            animation: gradientDrift 9s ease-in-out infinite alternate;
+        }
+        @keyframes gradientDrift {
+            from { background-position: 0% 50%; }
+            to { background-position: 100% 50%; }
+        }
+        .rune-tag { position: relative; }
+        .rune-tag:hover { background: rgba(34,211,238,0.055); }
+        .btn-arcane { transition: transform .25s ease, box-shadow .25s ease, filter .25s ease; }
+        .btn-arcane:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 0 1px rgba(34,211,238,0.22), 0 12px 30px -10px rgba(255,79,163,0.34);
+        }
+        .repo-card { position: relative; overflow: hidden; }
+        .repo-card::after {
+            content: ''; position: absolute; top: 0; left: -120%; width: 70%; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(34,211,238,0.9), rgba(255,79,163,0.8), transparent);
+            transition: left .55s ease;
+        }
+        .repo-card:hover::after { left: 120%; }
+        .sigil { animation: sigilBreathe 5s ease-in-out infinite; }
+        @keyframes sigilBreathe {
+            0%, 100% { filter: drop-shadow(0 0 4px rgba(34,211,238,0.10)); }
+            50% { filter: drop-shadow(0 0 7px rgba(255,79,163,0.20)); }
+        }
+        #chat-fab { transition: transform .25s ease, box-shadow .25s ease; }
+        #chat-fab:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 0 24px rgba(139,92,246,0.42), 0 0 22px -7px rgba(34,211,238,0.42);
+        }
+        #scroll-progress { background-size: 200% 100%; animation: progressGlow 6s linear infinite; }
+        @keyframes progressGlow { to { background-position: 200% 0; } }
+
+        /* Slow, cinematic ambient lighting inspired by the reference portfolio */
+        body::before, body::after {
+            content: ""; position: fixed; width: 42vw; height: 42vw; min-width: 360px; min-height: 360px;
+            border-radius: 50%; filter: blur(85px); opacity: .10; pointer-events: none; z-index: -1;
+            will-change: transform; animation: ambientFloat 24s ease-in-out infinite alternate;
+        }
+        body::before { top: 12vh; left: -16vw; background: radial-gradient(circle, rgba(139,92,246,.9), transparent 68%); }
+        body::after { right: -17vw; top: 42vh; background: radial-gradient(circle, rgba(34,211,238,.75) 0%, rgba(255,22,140,.32) 38%, transparent 70%); animation-delay: -12s; animation-duration: 29s; }
+        @keyframes ambientFloat { 0% { transform: translate3d(0, -2vh, 0) scale(.92); } 50% { transform: translate3d(5vw, 4vh, 0) scale(1.08); } 100% { transform: translate3d(-2vw, 8vh, 0) scale(.98); } }
+        .reveal.is-visible { transition-delay: 0ms; }
+        .section-heading.is-visible::after { transition-duration: 1.2s; }
+        @media (prefers-reduced-motion: reduce) { body::before, body::after { animation: none; } }
+    
+        /* Code-rendered brand mark and wordmark (no raster logo image) */
+        .brand-code { min-width: 0; }
+        .brand-mark { width: 52px; height: 52px; flex: 0 0 auto; }
+        .brand-wordmark { display: flex; flex-direction: column; justify-content: center; line-height: 1; white-space: nowrap; }
+        .brand-name { font-family: Inter, sans-serif; font-size: 1.55rem; font-weight: 850; letter-spacing: .045em; color: #f8fafc; }
+        .brand-dot { color: #8B5CF6; }
+        .brand-tagline { margin-top: 5px; font-family: 'JetBrains Mono', monospace; font-size: .43rem; letter-spacing: .16em; color: #9691C4; }
+        .brand-tagline i { color: #22D3EE; font-style: normal; margin: 0 3px; }
+        @media (max-width: 640px) { .brand-mark { width: 40px; height: 40px; } .brand-name { font-size: 1.18rem; } .brand-tagline { font-size: .34rem; letter-spacing: .09em; } }
+
+    </style>
+</head>
+<body class="antialiased selection:bg-arcane/30 selection:text-white">
+
+    <div id="scroll-progress"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 w-full z-50 bg-void/85 backdrop-blur-md border-b border-cardBorder">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[76px] flex items-center justify-between">
+            <a href="#" class="flex items-center shrink-0" aria-label="Nithin T home">
+                <div class="brand-code flex items-center gap-3" aria-label="Nithin T — Computer Vision | Data Science">
+                    <svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-label="Camera and data logo">
+                        <defs>
+                            <linearGradient id="brandGradient" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#22D3EE" />
+                                <stop offset="55%" stop-color="#3B82F6" />
+                                <stop offset="100%" stop-color="#8B5CF6" />
+                            </linearGradient>
+                        </defs>
+                        <g fill="none" stroke="url(#brandGradient)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M7 22V11a4 4 0 0 1 4-4h11M42 7h11a4 4 0 0 1 4 4v11M7 42v11a4 4 0 0 0 4 4h11M57 42v11a4 4 0 0 1-4 4H42" />
+                            <circle cx="30" cy="31" r="15" />
+                            <circle cx="30" cy="31" r="6" />
+                            <path d="M45 45l8 8M43 13h5M45.5 10.5v5" />
+                            <path d="M43 49h4v-7h-4zM50 49h4V35h-4z" fill="url(#brandGradient)" stroke="none" />
+                        </g>
+                    </svg>
+                    <span class="brand-wordmark">
+                        <span class="brand-name">NITHIN<span class="brand-dot">.T</span></span>
+                        <span class="brand-tagline">COMPUTER VISION <i>|</i> DATA SCIENCE</span>
+                    </span>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-inkDim">
+                <a href="#about" class="hover:text-cyan transition-colors">About</a>
+                <a href="#education" class="hover:text-cyan transition-colors">Education</a>
+                <a href="#skills" class="hover:text-cyan transition-colors">Skills</a>
+                <a href="#projects" class="hover:text-cyan transition-colors">Projects</a>
+                <a href="#experience" class="hover:text-cyan transition-colors">Experience</a>
+                <a href="#publications" class="hover:text-cyan transition-colors">Publications</a>
+                <a href="#contact" class="hover:text-cyan transition-colors">Contact</a>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <a href="#contact" class="btn-arcane px-4 py-2 text-sm font-semibold rounded text-white transition-all">
+                    Get in Touch
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <canvas id="hero-canvas"></canvas>
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[36rem] h-[36rem] bg-arcane/[0.07] rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-1/4 right-10 w-96 h-96 bg-cyan/[0.06] rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+            <div class="lg:col-span-7 space-y-6 text-left">
+                <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-sm bg-void2/80 border border-arcane/40 text-arcaneBright text-xs glyph">
+                    <span class="w-2 h-2 rounded-full bg-cyan animate-pulse"></span>
+                    <span>AI &amp; DATA SCIENCE SPECIALIST</span>
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl font-bold text-white tracking-wide leading-tight">
+                    Where circuitry <span class="gradient-text">learns to conjure</span> intelligence.
+                </h1>
+
+                <p class="text-lg text-inkDim max-w-2xl leading-relaxed font-light">
+                    Artificial Intelligence and Data Science engineer specializing in Computer Vision, Machine Learning, and full-stack scalable applications — turning raw signal into systems that see, predict, and explain themselves.
+                </p>
+
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <a href="#projects" class="btn-arcane px-6 py-3 rounded font-medium text-white transition-all flex items-center space-x-2">
+                        <span>Explore Projects</span>
+                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    </a>
+                    <a href="mailto:nithint236@gmail.com" class="px-6 py-3 rounded font-medium bg-void2 hover:bg-card border border-cardBorder text-ink transition-all flex items-center space-x-2">
+                        <i data-lucide="mail" class="w-4 h-4 text-cyan"></i>
+                        <span>Contact Me</span>
+                    </a>
+                </div>
+
+                <!-- Fast Contact Links -->
+                <div class="flex items-center space-x-6 pt-6 text-inkDim">
+                    <a href="https://github.com/tnithin236" target="_blank" class="hover:text-cyan transition-colors flex items-center space-x-1 text-sm">
+                        <i data-lucide="github" class="w-5 h-5"></i>
+                        <span>GitHub</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/nithin-t-59b58727b/" target="_blank" class="hover:text-cyan transition-colors flex items-center space-x-1 text-sm">
+                        <i data-lucide="linkedin" class="w-5 h-5"></i>
+                        <span>LinkedIn</span>
+                    </a>
+                    <span class="flex items-center space-x-1 text-sm text-inkFaint">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-arcaneBright"></i>
+                        <span>Coimbatore, Tamil Nadu</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Terminal / Grimoire preview card -->
+            <div class="lg:col-span-5 relative">
+                <svg class="absolute -inset-10 opacity-30 pointer-events-none sigil-spin" viewBox="0 0 300 300" fill="none">
+                    <circle cx="150" cy="150" r="140" stroke="#8B5CF6" stroke-width="0.6" stroke-dasharray="2 6"/>
+                    <circle cx="150" cy="150" r="118" stroke="#22D3EE" stroke-width="0.6" stroke-dasharray="1 4"/>
+                    <polygon points="150,30 250,210 50,210" stroke="#8B5CF6" stroke-width="0.5" fill="none"/>
+                </svg>
+                <div class="grimoire relative bg-card border border-cardBorder rounded overflow-hidden">
+                    <div class="grimoire-scanline"></div>
+                    <div class="bg-void2/90 px-4 py-3 border-b border-cardBorder flex items-center justify-between">
+                        <div class="flex space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-arcane/70 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-cyan/70 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-gold/70 inline-block"></span>
+                        </div>
+                        <span class="text-xs glyph text-inkDim">grimoire.py</span>
+                        <div class="w-10"></div>
+                    </div>
+                    <div class="p-6 font-mono text-sm leading-relaxed space-y-2 text-inkDim" id="terminal-code">
+                        <p><span class="text-arcaneBright">class</span> <span class="text-white">DataScientist</span>:</p>
+                        <p class="pl-4"><span class="text-arcaneBright">def</span> <span class="text-cyan">__init__</span>(self):</p>
+                        <p class="pl-8">self.name = <span class="text-gold">"Nithin T"</span></p>
+                        <p class="pl-8">self.focus = [<span class="text-gold">"Computer Vision"</span>, <span class="text-gold">"Deep Learning"</span>, <span class="text-gold">"Full-Stack"</span>]</p>
+                        <p class="pl-8">self.core_stack = [<span class="text-gold">"PyTorch"</span>, <span class="text-gold">"ASP.NET Core"</span>, <span class="text-gold">"React"</span>, <span class="text-gold">"SQL"</span>]</p>
+                        <p class="pl-8">self.publication = <span class="text-gold">"IJRASET (DOI: 10.22214/...)"</span></p>
+                        <p class="pl-4"><span class="text-arcaneBright">def</span> <span class="text-cyan">mission</span>(self):</p>
+                        <p class="pl-8 text-arcaneBright">return <span class="text-gold">"Build explainable, high-impact AI systems."</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Metrics Ribbon -->
+    <section class="border-y border-cardBorder bg-void2/60 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+                <div class="text-3xl font-bold text-arcaneBright font-mono">89.68%</div>
+                <div class="text-sm text-inkDim mt-1">MRI Model Accuracy (ResNet50V2)</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold text-arcaneBright font-mono">11 Entities</div>
+                <div class="text-sm text-inkDim mt-1">Full-Stack Enterprise Architecture</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold text-arcaneBright font-mono">1 Paper</div>
+                <div class="text-sm text-inkDim mt-1">Published Research in IJRASET</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold text-arcaneBright font-mono">7.44 CGPA</div>
+                <div class="text-sm text-inkDim mt-1">B.Tech in AI & Data Science</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="flex items-center space-x-4 mb-12">
+            <span class="sigil"><i data-lucide="hexagon" class="w-6 h-6"></i><i data-lucide="atom" class="w-4 h-4 absolute"></i></span>
+            <h2 class="text-3xl font-bold text-white">About Me</h2>
+            <div class="h-px bg-cardBorder flex-grow max-w-md ml-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            <div class="lg:col-span-7 space-y-4 text-inkDim leading-relaxed">
+                <p>
+                    I am an Artificial Intelligence and Data Science undergraduate at <strong class="text-ink">United Institute of Technology</strong>, Tamil Nadu. My passion lies at the intersection of deep visual learning, data analytics, and scalable web engineering.
+                </p>
+                <p>
+                    I have demonstrated industry experience deploying real-time safety models in construction environments, constructing automated license plate recognition systems, and building full-featured transactional hospital management platforms complete with role-based JWT security and containerized deployments.
+                </p>
+                <p>
+                    In addition to engineering applications, I am committed to research rigor — having published a multi-class brain tumor classification framework utilizing <strong class="text-ink">ResNet50V2</strong> and <strong class="text-ink">Grad-CAM explainability</strong>.
+                </p>
+            </div>
+
+            <div class="lg:col-span-5 panel p-6 space-y-4">
+                <h3 class="text-lg font-semibold text-white flex items-center space-x-2">
+                    <i data-lucide="award" class="w-5 h-5 text-cyan"></i>
+                    <span>Highlights &amp; Leadership</span>
+                </h3>
+                <ul class="space-y-3 text-sm text-inkDim">
+                    <li class="flex items-start space-x-2">
+                        <span class="text-cyan mt-1">◆</span>
+                        <span><strong class="text-ink">Vice President:</strong> Rotaract Club of United Institute of Technology (2024–2025)</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-cyan mt-1">◆</span>
+                        <span><strong class="text-ink">Active Member:</strong> Rotaract Club of R.S. Puram, Coimbatore (2025–Present)</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-cyan mt-1">◆</span>
+                        <span><strong class="text-ink">Presenter:</strong> International Conference on Innovative Research in Engineering Sciences (2025)</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-cardBorder">
+        <div class="flex items-center space-x-4 mb-12">
+            <span class="sigil"><i data-lucide="hexagon" class="w-6 h-6"></i><i data-lucide="graduation-cap" class="w-4 h-4 absolute"></i></span>
+            <h2 class="text-3xl font-bold text-white">Education</h2>
+            <div class="h-px bg-cardBorder flex-grow max-w-md ml-4"></div>
+        </div>
+
+        <div class="relative border-l border-cardBorder ml-4 space-y-12">
+            <!-- Education Item 1 -->
+            <div class="relative pl-8">
+                <div class="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-arcane border-4 border-void timeline-dot"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                    <h3 class="text-xl font-bold text-white">B.Tech in Artificial Intelligence and Data Science</h3>
+                    <span class="text-xs font-medium text-cyan glyph">2022 – 2026</span>
+                </div>
+                <div class="text-inkDim text-sm font-medium mb-3">United Institute of Technology, Tamil Nadu</div>
+                <p class="text-inkDim text-sm leading-relaxed max-w-3xl">CGPA: 7.44</p>
+            </div>
+
+            <!-- Education Item 2 -->
+            <div class="relative pl-8">
+                <div class="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-arcane border-4 border-void timeline-dot"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                    <h3 class="text-xl font-bold text-white">Higher Secondary (HSC)</h3>
+                    <span class="text-xs font-medium text-cyan glyph">2020 – 2022</span>
+                </div>
+                <div class="text-inkDim text-sm font-medium mb-3">R.K. Sreerangammal Kalvi Nilayam, Coimbatore</div>
+                <p class="text-inkDim text-sm leading-relaxed max-w-3xl">Score: 76%</p>
+            </div>
+
+            <!-- Education Item 3 -->
+            <div class="relative pl-8">
+                <div class="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-arcane border-4 border-void timeline-dot"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                    <h3 class="text-xl font-bold text-white">SSLC</h3>
+                    <span class="text-xs font-medium text-cyan glyph">2019 – 2020</span>
+                </div>
+                <div class="text-inkDim text-sm font-medium mb-3">Kikani Vidhya Mandir, Coimbatore</div>
+                <p class="text-inkDim text-sm leading-relaxed max-w-3xl">Score: 74%</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Skills Section -->
+    <section id="skills" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-cardBorder">
+        <div class="flex items-center space-x-4 mb-12">
+            <span class="sigil"><i data-lucide="hexagon" class="w-6 h-6"></i><i data-lucide="wand-2" class="w-4 h-4 absolute"></i></span>
+            <h2 class="text-3xl font-bold text-white">Technical Arsenal</h2>
+            <div class="h-px bg-cardBorder flex-grow max-w-md ml-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Card 1: AI & ML -->
+            <div class="panel p-6">
+                <div class="w-12 h-12 rounded bg-arcane/10 border border-arcane/30 flex items-center justify-center text-arcaneBright mb-4">
+                    <i data-lucide="brain-circuit" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-3">AI &amp; Deep Learning</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">TensorFlow</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Scikit-learn</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Regression Analysis</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">CNNs</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">ResNet50V2</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Grad-CAM</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Generative AI</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Retrieval-Augmented Generation (RAG)</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Gemini API</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">FastAPI</span>
+                </div>
+            </div>
+
+            <!-- Card 2: Computer Vision -->
+            <div class="panel p-6">
+                <div class="w-12 h-12 rounded bg-arcane/10 border border-arcane/30 flex items-center justify-center text-arcaneBright mb-4">
+                    <i data-lucide="eye" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-3">Computer Vision</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">YOLO</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">DETR</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">OpenCV</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">OCR</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Object Detection</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Roboflow</span>
+                </div>
+            </div>
+
+            <!-- Card 3: Full-Stack & Backend -->
+            <div class="panel p-6">
+                <div class="w-12 h-12 rounded bg-arcane/10 border border-arcane/30 flex items-center justify-center text-arcaneBright mb-4">
+                    <i data-lucide="code" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-3">Web &amp; Backend</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">ASP.NET Core</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">C#</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">React.js</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">EF Core</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">REST APIs</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">JWT Security</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Bootstrap</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Axios</span>
+                </div>
+            </div>
+
+            <!-- Card 4: Databases & Cloud -->
+            <div class="panel p-6">
+                <div class="w-12 h-12 rounded bg-arcane/10 border border-arcane/30 flex items-center justify-center text-arcaneBright mb-4">
+                    <i data-lucide="database" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-3">Databases &amp; Cloud</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">PostgreSQL</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Oracle SQL</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Pinecone Vector DB</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Docker</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Render / Vercel / Neon</span>
+                </div>
+            </div>
+
+            <!-- Card 5: Business Intelligence -->
+            <div class="panel p-6">
+                <div class="w-12 h-12 rounded bg-gold/10 border border-gold/30 flex items-center justify-center text-gold mb-4">
+                    <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-3">Data &amp; Business Intelligence</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Power BI</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">DAX</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Pandas</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">NumPy</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Advanced Excel</span>
+                </div>
+            </div>
+
+            <!-- Card 6: Languages & Tools -->
+            <div class="panel p-6">
+                <div class="w-12 h-12 rounded bg-cyan/10 border border-cyan/30 flex items-center justify-center text-cyan mb-4">
+                    <i data-lucide="terminal" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-3">Programming &amp; Tooling</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Python</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">C#</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">JavaScript</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Git / GitHub</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Postman</span>
+                    <span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-sm text-inkDim">Claude AI</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-cardBorder">
+        <div class="flex items-center space-x-4 mb-12">
+            <span class="sigil"><i data-lucide="hexagon" class="w-6 h-6"></i><i data-lucide="zap" class="w-4 h-4 absolute"></i></span>
+            <h2 class="text-3xl font-bold text-white">Featured Projects</h2>
+            <div class="h-px bg-cardBorder flex-grow max-w-md ml-4"></div>
+        </div>
+
+        <div id="projects-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8"></div>
+
+        <!-- All projects -->
+        <div id="all-projects" class="mt-20">
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                <div>
+                    <h3 class="text-2xl font-bold text-white">All Projects</h3>
+                    <p id="repo-count" class="text-sm text-inkDim mt-1"></p>
+                </div>
+                <div class="relative w-full sm:w-72">
+                    <i data-lucide="search" class="w-4 h-4 text-inkFaint absolute left-3 top-1/2 -translate-y-1/2"></i>
+                    <input id="repo-search" type="search" placeholder="Search projects..." autocomplete="off"
+                           class="w-full bg-void2 border border-cardBorder rounded pl-9 pr-3 py-2 text-sm text-ink focus:outline-none focus:border-arcane">
+                </div>
+            </div>
+            <div id="repo-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            <p id="repo-empty" class="hidden text-inkDim text-sm py-8 text-center">No projects match your search.</p>
+            <div class="text-center mt-8">
+                <button id="repo-toggle" type="button" class="btn-arcane px-6 py-3 rounded font-medium text-white inline-flex items-center space-x-2">
+                    <span id="repo-toggle-label">Show all projects</span>
+                    <i data-lucide="chevrons-down" class="w-4 h-4"></i>
+                </button>
+                <a href="https://github.com/tnithin236?tab=repositories" target="_blank" rel="noopener" class="ml-3 inline-flex items-center space-x-2 px-5 py-3 rounded bg-void2 border border-cardBorder text-ink text-sm font-medium hover:border-cyan transition-colors">
+                    <i data-lucide="github" class="w-4 h-4 text-cyan"></i><span>View on GitHub</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- GitHub Contributions Section -->
+    <section id="shipping" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-cardBorder">
+        <div class="flex items-center space-x-4 mb-8">
+            <span class="sigil"><i data-lucide="hexagon" class="w-6 h-6"></i><i data-lucide="git-commit" class="w-4 h-4 absolute"></i></span>
+            <h2 class="text-3xl font-bold text-white">Shipping</h2>
+            <div class="h-px bg-cardBorder flex-grow max-w-md ml-4"></div>
+        </div>
+        <div class="panel p-6">
+            <p id="gh-summary" class="text-inkDim text-sm mb-5">Loading contributions…</p>
+            <div id="gh-scroll" class="overflow-x-auto pb-2">
+                <div id="gh-grid" aria-label="GitHub contribution graph"></div>
+            </div>
+            <div id="gh-legend" class="flex items-center justify-end gap-2 mt-4 text-xs text-inkFaint">
+                <span>Less</span>
+                <span class="gh-cell"></span><span class="gh-cell l1"></span><span class="gh-cell l2"></span><span class="gh-cell l3"></span><span class="gh-cell l4"></span>
+                <span>More</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Timeline Section -->
+    <section id="experience" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-cardBorder">
+        <div class="flex items-center space-x-4 mb-12">
+            <span class="sigil"><i data-lucide="hexagon" class="w-6 h-6"></i><i data-lucide="orbit" class="w-4 h-4 absolute"></i></span>
+            <h2 class="text-3xl font-bold text-white">Experience &amp; Training</h2>
+            <div class="h-px bg-cardBorder flex-grow max-w-md ml-4"></div>
+        </div>
+
+        <div class="relative border-l border-cardBorder ml-4 space-y-12">
+            <!-- Experience Item 1 -->
+            <div class="relative pl-8">
+                <div class="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-arcane border-4 border-void timeline-dot"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                    <h3 class="text-xl font-bold text-white">Data Science Trainee</h3>
+                    <span class="text-xs font-medium text-cyan glyph">Feb 2026 – Aug 2026</span>
+                </div>
+                <div class="text-inkDim text-sm font-medium mb-3">Q Spiders</div>
+                <p class="text-inkDim text-sm leading-relaxed max-w-3xl">
+                    Completed an intensive 6-month program mastering Oracle SQL querying, database design, Python analytical libraries (Pandas, NumPy), and Power BI enterprise dashboard modeling.
+                </p>
+            </div>
+
+            <!-- Experience Item 2 -->
+            <div class="relative pl-8">
+                <div class="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-arcane border-4 border-void timeline-dot"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                    <h3 class="text-xl font-bold text-white">AI / ML Intern</h3>
+                    <span class="text-xs font-medium text-cyan glyph">Jun 2025 – Aug 2025</span>
+                </div>
+                <div class="text-inkDim text-sm font-medium mb-3">Neuronest AI Pvt Ltd</div>
+                <p class="text-inkDim text-sm leading-relaxed max-w-3xl">
+                    Designed and deployed real-time computer vision models for safety violation and PPE detection utilizing YOLO, DETR, and OpenCV in live monitoring ecosystems.
+                </p>
+            </div>
+
+            <!-- Experience Item 3 -->
+            <div class="relative pl-8">
+                <div class="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-arcane border-4 border-void timeline-dot"></div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                    <h3 class="text-xl font-bold text-white">Data Science Intern</h3>
+                    <span class="text-xs font-medium text-cyan glyph">May 2025 – Jul 2025</span>
+                </div>
+                <div class="text-inkDim text-sm font-medium mb-3">UptoSkills</div>
+                <p class="text-inkDim text-sm leading-relaxed max-w-3xl">
+                    Transformed and analyzed complex business data sets to empower recruitment strategy. Engineered executive-facing Power BI dashboards and automated reporting workflows.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Publications & Certifications -->
+    <section id="publications" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-cardBorder">
+        <div class="flex items-center space-x-4 mb-12">
+            <span class="sigil"><i data-lucide="hexagon" class="w-6 h-6"></i><i data-lucide="book-open" class="w-4 h-4 absolute"></i></span>
+            <h2 class="text-3xl font-bold text-white">Research &amp; Credentials</h2>
+            <div class="h-px bg-cardBorder flex-grow max-w-md ml-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Paper -->
+            <div class="panel p-6">
+                <h3 class="text-lg font-bold text-white flex items-center space-x-2 mb-4">
+                    <i data-lucide="book-open" class="w-5 h-5 text-cyan"></i>
+                    <span>Published Research</span>
+                </h3>
+                <div class="space-y-4">
+                    <div class="p-4 bg-void2/60 rounded border border-cardBorder">
+                        <h4 class="font-semibold text-white text-sm">Multi-Class Brain Tumor Classification from MRI Using ResNet50V2 Transfer Learning with Two-Stage Augmentation, Grad-CAM Explainability, and Cross-Dataset Validation</h4>
+                        <p class="text-xs text-inkDim mt-2">IJRASET • Vol 14, Issue IV, April 2026</p>
+                        <a href="https://doi.org/10.22214/ijraset.2026.79816" target="_blank" class="text-xs text-cyan hover:underline mt-2 inline-block font-mono">DOI: 10.22214/ijraset.2026.79816 →</a>
+                    </div>
+                    <div class="p-4 bg-void2/60 rounded border border-cardBorder">
+                        <h4 class="font-semibold text-white text-sm">Neural Network Compression (Conference Presentation)</h4>
+                        <p class="text-xs text-inkDim mt-1">International Conference on Innovative Research in Engineering Sciences (2025)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certifications -->
+            <div class="panel p-6">
+                <h3 class="text-lg font-bold text-white flex items-center space-x-2 mb-4">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-cyan"></i>
+                    <span>Certifications</span>
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between text-sm p-3 bg-void2/50 rounded border border-cardBorder">
+                        <span class="text-ink">Python for Data Science</span>
+                        <span class="text-xs font-medium text-gold">NPTEL (IITs &amp; IISc)</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm p-3 bg-void2/50 rounded border border-cardBorder">
+                        <span class="text-ink">Data Analytics Using Power BI</span>
+                        <span class="text-xs font-medium text-gold">LetsUpgrade</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm p-3 bg-void2/50 rounded border border-cardBorder">
+                        <span class="text-ink">Data Science Foundations</span>
+                        <span class="text-xs font-medium text-gold">Great Learning</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm p-3 bg-void2/50 rounded border border-cardBorder">
+                        <span class="text-ink">Generative AI</span>
+                        <span class="text-xs font-medium text-gold">LinkedIn Learning</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm p-3 bg-void2/50 rounded border border-cardBorder">
+                        <span class="text-ink">Data Visualization</span>
+                        <span class="text-xs font-medium text-gold">TATA Corp (Forage)</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm p-3 bg-void2/50 rounded border border-cardBorder">
+                        <span class="text-ink">Claude Code in Action</span>
+                        <span class="text-xs font-medium text-gold">Claude Academy</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm p-3 bg-void2/50 rounded border border-cardBorder">
+                        <span class="text-ink">Building Effective Human Agent Teams (Beta)</span>
+                        <span class="text-xs font-medium text-gold">Claude Academy</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-cardBorder">
+        <div class="flex items-center space-x-4 mb-12">
+            <span class="sigil"><i data-lucide="hexagon" class="w-6 h-6"></i><i data-lucide="send" class="w-4 h-4 absolute"></i></span>
+            <h2 class="text-3xl font-bold text-white">Get In Touch</h2>
+            <div class="h-px bg-cardBorder flex-grow max-w-md ml-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <div class="space-y-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-white mb-3">Let's start a conversation</h3>
+                    <p class="text-inkDim leading-relaxed max-w-lg">
+                        I am open to full-time roles, internships, and research collaborations in AI, Machine Learning, Data Analytics, and Full-Stack Engineering. Send a message and it lands straight in my inbox.
+                    </p>
+                </div>
+                <div class="space-y-5">
+                    <div class="flex items-center space-x-4">
+                        <span class="w-11 h-11 rounded bg-arcane/10 border border-arcane/30 flex items-center justify-center text-arcaneBright"><i data-lucide="mail" class="w-5 h-5"></i></span>
+                        <div>
+                            <div class="text-xs text-inkFaint">Email</div>
+                            <a href="mailto:nithint236@gmail.com" class="text-ink hover:text-cyan transition-colors">nithint236@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="w-11 h-11 rounded bg-arcane/10 border border-arcane/30 flex items-center justify-center text-arcaneBright"><i data-lucide="phone" class="w-5 h-5"></i></span>
+                        <div>
+                            <div class="text-xs text-inkFaint">Phone</div>
+                            <a href="tel:6380144282" class="text-ink hover:text-cyan transition-colors">+91 6380144282</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="w-11 h-11 rounded bg-arcane/10 border border-arcane/30 flex items-center justify-center text-arcaneBright"><i data-lucide="share-2" class="w-5 h-5"></i></span>
+                        <div class="flex space-x-5 text-ink">
+                            <a href="https://github.com/tnithin236" target="_blank" rel="noopener" class="hover:text-cyan transition-colors">GitHub</a>
+                            <a href="https://www.linkedin.com/in/nithin-t-59b58727b/" target="_blank" rel="noopener" class="hover:text-cyan transition-colors">LinkedIn</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form id="contact-form" class="panel p-6 sm:p-8 space-y-5" novalidate>
+                <h3 class="font-display text-xl font-semibold text-white">Send a Message</h3>
+                <!-- Honeypot: real visitors never see or fill this -->
+                <input type="checkbox" name="botcheck" id="botcheck" tabindex="-1" autocomplete="off" style="display:none">
+                <div>
+                    <label for="cf-name" class="block text-xs glyph text-inkDim mb-2">NAME</label>
+                    <input id="cf-name" name="name" type="text" required maxlength="100" class="w-full bg-void2 border border-cardBorder rounded px-4 py-3 text-ink focus:outline-none focus:border-arcane">
+                </div>
+                <div>
+                    <label for="cf-email" class="block text-xs glyph text-inkDim mb-2">EMAIL</label>
+                    <input id="cf-email" name="email" type="email" required maxlength="150" class="w-full bg-void2 border border-cardBorder rounded px-4 py-3 text-ink focus:outline-none focus:border-arcane">
+                </div>
+                <div>
+                    <label for="cf-message" class="block text-xs glyph text-inkDim mb-2">MESSAGE</label>
+                    <textarea id="cf-message" name="message" rows="5" required maxlength="2000" class="w-full bg-void2 border border-cardBorder rounded px-4 py-3 text-ink focus:outline-none focus:border-arcane resize-y"></textarea>
+                </div>
+                <button id="cf-submit" type="submit" class="btn-arcane w-full px-6 py-3 rounded font-medium text-white transition-all flex items-center justify-center space-x-2">
+                    <span id="cf-label">Send Message</span>
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                </button>
+                <p id="cf-status" role="status" aria-live="polite" class="text-sm min-h-[1.25rem]"></p>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-cardBorder text-center text-xs text-inkFaint">
+        <p>© 2026 Nithin T. Designed &amp; Built for AI &amp; Data Science Engineering.</p>
+    </footer>
+
+    <!-- AI Chat Widget -->
+    <button id="chat-fab" aria-label="Open chat assistant"><i data-lucide="sparkles" class="w-6 h-6"></i></button>
+    <div id="chat-panel" role="dialog" aria-label="Portfolio assistant">
+        <div class="px-4 py-3 border-b border-cardBorder bg-void2 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full bg-cyan animate-pulse"></span>
+                <span class="font-display text-white text-sm font-semibold">Ask Nithin's Familiar</span>
+            </div>
+            <button id="chat-close" aria-label="Close chat" class="text-inkDim hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+        <div id="chat-messages">
+            <div class="msg bot">Greetings, traveler. I'm an AI assistant that knows Nithin's projects, skills and experience. What would you like to know?</div>
+            <div class="flex flex-wrap gap-2" id="chat-chips">
+                <span class="chip">What are his top projects?</span>
+                <span class="chip">What is his tech stack?</span>
+                <span class="chip">Is he open to work?</span>
+            </div>
+        </div>
+        <form id="chat-form" class="p-3 border-t border-cardBorder flex gap-2">
+            <input id="chat-input" type="text" maxlength="500" autocomplete="off" placeholder="Ask about Nithin..." class="flex-1 bg-void2 border border-cardBorder rounded px-3 py-2 text-sm text-ink focus:outline-none focus:border-arcane">
+            <button type="submit" class="btn-arcane px-3 rounded text-white" aria-label="Send"><i data-lucide="send" class="w-4 h-4"></i></button>
+        </form>
+    </div>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+        try { if (window.lucide) lucide.createIcons(); } catch (e) { console.warn("Icons failed to load", e); }
+
+        // ---- Chat widget ----
+        // After deploying the backend, paste its URL here (e.g. https://your-bot.onrender.com/chat)
+        const CHAT_API_URL = 'http://127.0.0.1:8000/chat';
+        (function () {
+            const fab = document.getElementById('chat-fab');
+            const panel = document.getElementById('chat-panel');
+            const form = document.getElementById('chat-form');
+            const input = document.getElementById('chat-input');
+            const box = document.getElementById('chat-messages');
+            const history = [];
+
+            fab.addEventListener('click', () => { panel.classList.toggle('open'); if (panel.classList.contains('open')) input.focus(); });
+            document.getElementById('chat-close').addEventListener('click', () => panel.classList.remove('open'));
+
+            function add(text, who) {
+                const el = document.createElement('div');
+                el.className = 'msg ' + who;
+                el.textContent = text;
+                box.appendChild(el);
+                box.scrollTop = box.scrollHeight;
+                return el;
+            }
+
+            function mdInline(s) {
+                return s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>');
+            }
+            function renderMd(text) {
+                const esc = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                let html = '', inList = false;
+                esc.split('\n').forEach(raw => {
+                    const line = raw.trim();
+                    const li = line.match(/^[*\-\u2022]\s+(.*)$/);
+                    const h = line.match(/^#{1,6}\s+(.*)$/);
+                    if (li) {
+                        if (!inList) { html += '<ul>'; inList = true; }
+                        html += '<li>' + mdInline(li[1]) + '</li>';
+                    } else {
+                        if (inList) { html += '</ul>'; inList = false; }
+                        if (h) html += '<p><strong>' + mdInline(h[1]) + '</strong></p>';
+                        else if (line) html += '<p>' + mdInline(line) + '</p>';
+                    }
+                });
+                if (inList) html += '</ul>';
+                return html;
+            }
+
+            async function send(text) {
+                add(text, 'user');
+                const pending = add('Consulting the runes...', 'bot');
+                if (!CHAT_API_URL) {
+                    pending.textContent = 'The chat backend is not connected yet. Set CHAT_API_URL in the page script.';
+                    return;
+                }
+                try {
+                    const res = await fetch(CHAT_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: text, history: history.slice(-8) })
+                    });
+                    if (!res.ok) throw new Error('Request failed');
+                    const data = await res.json();
+                    pending.innerHTML = renderMd(data.reply);
+                    pending.style.whiteSpace = 'normal';
+                    history.push({ role: 'user', text }, { role: 'model', text: data.reply });
+                } catch (e) {
+                    pending.textContent = 'The spell fizzled. Please try again, or email nithint236@gmail.com.';
+                }
+            }
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const text = input.value.trim();
+                if (!text) return;
+                input.value = '';
+                send(text);
+            });
+            document.getElementById('chat-chips').addEventListener('click', (e) => {
+                if (e.target.classList.contains('chip')) { document.getElementById('chat-chips').remove(); send(e.target.textContent); }
+            });
+        })();
+
+        // Hero canvas: drifting embers / starfield (single orchestrated ambient motion)
+        (function () {
+            const canvas = document.getElementById('hero-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            let w, h, particles;
+
+            function resize() {
+                const section = canvas.parentElement;
+                w = canvas.width = section.offsetWidth;
+                h = canvas.height = section.offsetHeight;
+            }
+
+            function makeParticles() {
+                const count = Math.floor((w * h) / 22000);
+                particles = Array.from({ length: count }, () => ({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    r: Math.random() * 1.4 + 0.3,
+                    speed: Math.random() * 0.25 + 0.05,
+                    hue: Math.random() > 0.5 ? '139,92,246' : '34,211,238',
+                    alpha: Math.random() * 0.5 + 0.2
+                }));
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, w, h);
+                particles.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${p.hue},${p.alpha})`;
+                    ctx.fill();
+                    if (!reduceMotion) {
+                        p.y -= p.speed;
+                        if (p.y < -5) { p.y = h + 5; p.x = Math.random() * w; }
+                    }
+                });
+                if (!reduceMotion) requestAnimationFrame(draw);
+            }
+
+            resize();
+            makeParticles();
+            draw();
+            window.addEventListener('resize', () => { resize(); makeParticles(); if (reduceMotion) draw(); }, { passive: true });
+        })();
+
+        // ---- Contact form (Web3Forms -> your Gmail) ----
+        // Get a free access key at https://web3forms.com (it is emailed to you) and paste it here.
+        // This key is meant to be public; it only lets people send messages TO your inbox.
+        const WEB3FORMS_KEY = '35e20f64-ca8a-45f5-a0a6-45620c82229d';
+        (function () {
+            const form = document.getElementById('contact-form');
+            if (!form) return;
+            const status = document.getElementById('cf-status');
+            const btn = document.getElementById('cf-submit');
+            const label = document.getElementById('cf-label');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                status.className = 'text-sm min-h-[1.25rem] text-inkDim';
+                if (!form.checkValidity()) {
+                    status.textContent = 'Please fill in your name, a valid email, and a message.';
+                    status.className = 'text-sm min-h-[1.25rem] text-gold';
+                    return;
+                }
+                if (!WEB3FORMS_KEY) {
+                    status.textContent = 'Contact form is not connected yet. Please email nithint236@gmail.com directly.';
+                    status.className = 'text-sm min-h-[1.25rem] text-gold';
+                    return;
+                }
+                btn.disabled = true;
+                label.textContent = 'Sending...';
+                try {
+                    const payload = Object.fromEntries(new FormData(form));
+                    payload.access_key = WEB3FORMS_KEY;
+                    payload.subject = 'New portfolio message from ' + payload.name;
+                    payload.from_name = 'Portfolio Contact Form';
+                    const res = await fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        status.textContent = 'Message sent. Thank you, I will get back to you soon.';
+                        status.className = 'text-sm min-h-[1.25rem] text-cyan';
+                        form.reset();
+                    } else {
+                        throw new Error(data.message || 'Failed');
+                    }
+                } catch (err) {
+                    status.textContent = 'Could not send. Please email nithint236@gmail.com directly.';
+                    status.className = 'text-sm min-h-[1.25rem] text-gold';
+                } finally {
+                    btn.disabled = false;
+                    label.textContent = 'Send Message';
+                }
+            });
+        })();
+
+        // ---- Projects (edit this list; put recordings in a "media" folder next to index.html) ----
+        const GH_PROFILE = 'https://github.com/tnithin236';
+        const PROJECTS = [
+            {
+                title: 'Brain Tumor MRI Multi-Class Classification',
+                badge: 'Published Research', year: '2025 – 2026',
+                video: 'media/brain-tumor.mp4',
+                desc: 'Two-phase transfer learning framework using ResNet50V2 for four-class MRI classification (glioma, meningioma, pituitary, normal), validated against radiologist annotations with Grad-CAM explainability.',
+                points: ['Accuracy: <strong class="text-white">89.68%</strong> | Macro-AUC: <strong class="text-white">0.9820</strong>', 'Published: IJRASET Vol 14, Issue IV'],
+                tags: ['ResNet50V2', 'TensorFlow', 'Grad-CAM', 'OpenCV'],
+                links: [
+                    { label: 'GitHub', url: 'https://github.com/tnithin236/Multi-Class-Brain-Tumor-Classification-from-MRI-Using-ResNet50V2', icon: 'github' },
+                    { label: 'Paper', url: 'https://doi.org/10.22214/ijraset.2026.79816', icon: 'book-open' }
+                ]
+            },
+            {
+                title: 'Full-Stack Hospital Management System',
+                badge: 'Full-Stack Enterprise', year: '2026',
+                video: 'media/hospital-management.mp4',
+                desc: 'Enterprise health platform spanning 11 relational entities with automated stock deductions and billing workflows, secured by JWT role authorization (Admin, Doctor, Staff, Receptionist).',
+                points: ['Architecture: REST API + EF Core + React', 'Deployed: Docker on Render &amp; Vercel, Neon PostgreSQL'],
+                tags: ['ASP.NET Core', 'React', 'PostgreSQL', 'Docker'],
+                links: [
+                    { label: 'Live Demo', url: 'https://hospital-management-system-virid-sigma.vercel.app/login', icon: 'external-link' },
+                    { label: 'GitHub', url: GH_PROFILE + '/hospital-management-system', icon: 'github' }
+                ]
+            },
+            {
+                title: 'RAG Knowledge Assistant',
+                badge: 'Generative AI / RAG', year: '2026',
+                video: 'media/rag-assistant.mp4',
+                desc: 'Upload PDF, DOCX or TXT files and ask natural-language questions. A modular FastAPI pipeline handles extraction, chunking and embeddings, with Pinecone semantic search and cited sources on every answer.',
+                points: ['Similarity-threshold gating to reduce hallucinations', 'React frontend with persistent chat history'],
+                tags: ['FastAPI', 'Pinecone', 'Gemini API', 'React', 'Docker'],
+                links: [{ label: 'GitHub', url: GH_PROFILE + '/rag-knowledge-assistant', icon: 'github' }]
+            },
+            {
+                title: 'Construction PPE Detection System',
+                badge: 'Computer Vision', year: '2025',
+                video: 'media/ppe-detection.mp4',
+                desc: 'Automated violation detection for safety equipment on live construction sites, with a real-time alert engine and an analytics dashboard for compliance tracking.',
+                points: ['Performance: <strong class="text-white">92% real-world accuracy</strong>', 'Features: real-time alerts and trends dashboard'],
+                tags: ['YOLO', 'DETR', 'OpenCV', 'Safety Analytics'],
+                links: [{ label: 'GitHub', url: 'https://github.com/tnithin236/PPE_detection-', icon: 'github' }]
+            },
+            {
+                title: 'Vehicle Number Plate Detection System',
+                badge: 'Vision & OCR', year: '2025',
+                video: 'media/number-plate.mp4',
+                desc: 'Automated license plate recognition pipeline built with DETR and OpenCV, optimized for challenging lighting and angled perspectives across diverse vehicle types and plate formats.',
+                points: ['Custom augmentation and high-speed OCR pipeline'],
+                tags: ['DETR', 'OpenCV', 'OCR', 'Augmentation'],
+                links: [{ label: 'GitHub', url: 'https://github.com/tnithin236/License-Plate-Detection-Recognition', icon: 'github' }]
+            },
+            {
+                title: 'Predictive Maintenance & Anomaly Detection System',
+                badge: 'Machine Learning', year: '',
+                video: 'media/predictive-maintenance.mp4',
+                desc: 'End-to-end ML application that predicts machine failure probability, flags unusual machine behaviour with Isolation Forest, and explains each prediction with SHAP. Served through a FastAPI service and a Streamlit dashboard.',
+                points: ['XGBoost on AI4I data: <strong class="text-white">0.988 ROC-AUC</strong> | <strong class="text-white">0.898 PR-AUC</strong> (held-out test set)', 'Per-prediction SHAP factors and a 34-test pytest suite'],
+                tags: ['Python', 'XGBoost', 'SHAP', 'Isolation Forest', 'FastAPI', 'Streamlit'],
+                links: [{ label: 'GitHub', url: GH_PROFILE + '/predictive-maintenance', icon: 'github' }]
+            }
+        ];
+
+        (function renderProjects() {
+            const grid = document.getElementById('projects-grid');
+            if (!grid) return;
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            PROJECTS.forEach(pr => {
+                const card = document.createElement('article');
+                card.className = 'panel flex flex-col';
+                card.innerHTML =
+                    '<div class="proj-media relative aspect-video bg-void2 overflow-hidden border-b border-cardBorder">' +
+                        '<div class="proj-ph absolute inset-0 flex flex-col items-center justify-center text-center px-6" ' +
+                             'style="background: radial-gradient(circle at 30% 20%, rgba(139,92,246,0.25), transparent 55%), radial-gradient(circle at 80% 80%, rgba(34,211,238,0.18), transparent 50%), #0A0C1C;">' +
+                            '<i data-lucide="play-circle" class="w-10 h-10 text-arcaneBright mb-2"></i>' +
+                            '<span class="text-xs glyph text-inkDim">SCREEN RECORDING COMING SOON</span>' +
+                        '</div>' +
+                        '<video class="proj-video absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500" muted loop playsinline preload="none" data-src="' + pr.video + '" aria-label="' + pr.title + ' demo recording"></video>' +
+                    '</div>' +
+                    '<div class="p-6 flex flex-col flex-grow">' +
+                        '<div class="flex justify-between items-start mb-3">' +
+                            '<span class="px-3 py-1 rounded-sm text-xs font-medium bg-arcane/10 text-arcaneBright border border-arcane/30">' + pr.badge + '</span>' +
+                            '<span class="text-xs font-medium text-inkFaint glyph">' + pr.year + '</span>' +
+                        '</div>' +
+                        '<h3 class="text-xl font-bold text-white mb-2">' + pr.title + '</h3>' +
+                        '<p class="text-inkDim text-sm leading-relaxed mb-4">' + pr.desc + '</p>' +
+                        '<ul class="text-xs text-gold/90 space-y-1.5 mb-4 bg-void2/70 border border-cardBorder rounded p-3">' +
+                            pr.points.map(t => '<li>• ' + t + '</li>').join('') +
+                        '</ul>' +
+                        '<div class="flex flex-wrap gap-2 mb-5">' +
+                            pr.tags.map(t => '<span class="rune-tag px-2.5 py-1 text-xs font-medium rounded-full text-inkDim">' + t + '</span>').join('') +
+                        '</div>' +
+                        '<div class="mt-auto flex flex-wrap gap-3">' +
+                            pr.links.map(l => '<a href="' + l.url + '" target="_blank" rel="noopener" class="inline-flex items-center space-x-2 px-4 py-2 rounded bg-void2 border border-cardBorder text-ink text-sm font-medium hover:border-cyan hover:text-white transition-colors">' + (l.icon === 'github' ? '<svg class="w-4 h-4 text-cyan" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.55.1.76-.24.76-.53v-2.08c-3.1.67-3.76-1.32-3.76-1.32-.5-1.28-1.23-1.62-1.23-1.62-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15.99 1.7 2.6 1.21 3.23.93.1-.72.39-1.21.7-1.49-2.48-.28-5.09-1.24-5.09-5.52 0-1.22.44-2.22 1.15-3-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.05 1.14a10.6 10.6 0 0 1 5.55 0c2.11-1.44 3.05-1.14 3.05-1.14.61 1.54.23 2.68.11 2.96.72.78 1.15 1.78 1.15 3.01 0 4.29-2.61 5.23-5.1 5.51.4.35.75 1.03.75 2.08V22c0 .29.2.63.76.52A11.1 11.1 0 0 0 12 .9Z"/></svg>' : '<i data-lucide="' + l.icon + '" class="w-4 h-4 text-cyan"></i>') + '<span>' + l.label + '</span></a>').join('') +
+                        '</div>' +
+                    '</div>';
+                grid.appendChild(card);
+            });
+
+            if (window.lucide) { try { lucide.createIcons(); } catch (e) {} }
+
+            // Load and play each recording only while it is on screen
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const v = entry.target;
+                    if (entry.isIntersecting) {
+                        if (!v.src) {
+                            v.src = v.dataset.src;
+                            v.addEventListener('loadeddata', () => { v.classList.remove('opacity-0'); }, { once: true });
+                            v.addEventListener('error', () => { v.classList.add('opacity-0'); }, { once: true });
+                            if (reduceMotion) v.controls = true;
+                        }
+                        if (!reduceMotion) v.play().catch(() => {});
+                    } else {
+                        v.pause();
+                    }
+                });
+            }, { threshold: 0.4 });
+            grid.querySelectorAll('.proj-video').forEach(v => io.observe(v));
+        })();
+
+        // ---- All projects (static list + live details from the GitHub API when reachable) ----
+        const ALL_REPOS = [
+            ['solar-filament-segmentation', 'Solar Filament Segmentation'],
+            ['Car-Damage-Detection-System', 'Car Damage Detection System'],
+            ['Predictive-Maintenance-for-Jet-Engines', 'Predictive Maintenance for Jet Engines'],
+            ['Mall-Customer-Segmentation-Data', 'Mall Customer Segmentation'],
+            ['Pneumonia-detection-from-chest-X-rays', 'Pneumonia Detection from Chest X-rays'],
+            ['Construction_Analytics', 'Construction Analytics'],
+            ['construction-site-helmet-detection', 'Construction Site Helmet Detection'],
+            ['Delivery-Delay-Prediction', 'Delivery Delay Prediction'],
+            ['healthrisk-ai', 'HealthRisk AI'],
+            ['AI-Powered-Resume-Screening-and-Job-Matching-System', 'AI-Powered Resume Screening and Job Matching System'],
+            ['Hotelguard', 'HotelGuard'],
+            ['Breast-cancer-detection-with-ResNet-50-V2', 'Breast Cancer Detection with ResNet-50 V2'],
+            ['FraudShield', 'FraudShield'],
+            ['AI-Spam-Email-Detection-System', 'AI Spam Email Detection System'],
+            ['helmet-detection', 'Helmet Detection'],
+            ['loan-default-prediction', 'Loan Default Prediction'],
+            ['catagorical_finder', 'Catagorical Finder'],
+            ['Medical-Insurance-Cost-Prediction', 'Medical Insurance Cost Prediction'],
+            ['Bank-Customer-Credit-Analysis', 'Bank Customer Credit Analysis']
+        ];
+        (async function renderAllRepos() {
+            const grid = document.getElementById('repo-grid');
+            if (!grid) return;
+            const GH_USER_NAME = 'tnithin236';
+            const COLLAPSED_COUNT = 6;
+            const langColors = { 'Python': '#3572A5', 'Jupyter Notebook': '#DA5B0B', 'JavaScript': '#F1E05A', 'TypeScript': '#3178C6', 'C#': '#178600', 'HTML': '#E34C26', 'CSS': '#563D7C', 'R': '#198CE7', 'Java': '#B07219' };
+
+            // Optional live details; fails silently (blocked, offline, rate limited)
+            const live = {};
+            try {
+                const res = await fetch('https://api.github.com/users/' + GH_USER_NAME + '/repos?per_page=100&sort=updated');
+                if (res.ok) (await res.json()).forEach(r => { live[r.name.toLowerCase()] = r; });
+            } catch (e) { /* keep static cards */ }
+
+            const cards = ALL_REPOS.map(([repo, title]) => {
+                const info = live[repo.toLowerCase()] || {};
+                const card = document.createElement('a');
+                card.href = 'https://github.com/' + GH_USER_NAME + '/' + repo;
+                card.target = '_blank';
+                card.rel = 'noopener';
+                card.className = 'repo-card p-5 flex flex-col';
+                card.dataset.search = (title + ' ' + (info.description || '') + ' ' + (info.language || '') + ' ' + (info.topics || []).join(' ')).toLowerCase();
+
+                const head = document.createElement('div');
+                head.className = 'flex items-start justify-between gap-3 mb-2';
+                const h = document.createElement('h4');
+                h.className = 'font-semibold text-white leading-snug';
+                h.textContent = title;
+                const icon = document.createElement('i');
+                icon.setAttribute('data-lucide', 'arrow-up-right');
+                icon.className = 'w-4 h-4 text-cyan flex-shrink-0 mt-1';
+                head.append(h, icon);
+                card.appendChild(head);
+
+                const desc = document.createElement('p');
+                desc.className = 'text-sm text-inkDim leading-relaxed mb-4';
+                desc.textContent = info.description || 'View the source code and README on GitHub.';
+                card.appendChild(desc);
+
+                const meta = document.createElement('div');
+                meta.className = 'mt-auto flex items-center gap-4 text-xs text-inkFaint';
+                if (info.language) {
+                    const lang = document.createElement('span');
+                    lang.className = 'inline-flex items-center gap-1.5';
+                    const dot = document.createElement('span');
+                    dot.style.cssText = 'width:10px;height:10px;border-radius:50%;background:' + (langColors[info.language] || '#22D3EE');
+                    lang.append(dot, document.createTextNode(info.language));
+                    meta.appendChild(lang);
+                }
+                if (info.stargazers_count) {
+                    const stars = document.createElement('span');
+                    stars.textContent = '★ ' + info.stargazers_count;
+                    meta.appendChild(stars);
+                }
+                if (!meta.children.length) {
+                    const t = document.createElement('span');
+                    t.textContent = 'GitHub repository';
+                    meta.appendChild(t);
+                }
+                card.appendChild(meta);
+                grid.appendChild(card);
+                return card;
+            });
+
+            if (window.lucide) { try { lucide.createIcons(); } catch (e) {} }
+
+            const search = document.getElementById('repo-search');
+            const toggle = document.getElementById('repo-toggle');
+            const toggleLabel = document.getElementById('repo-toggle-label');
+            const count = document.getElementById('repo-count');
+            const empty = document.getElementById('repo-empty');
+            let expanded = false;
+
+            function update() {
+                const q = search.value.trim().toLowerCase();
+                let shown = 0, matches = 0;
+                cards.forEach((card, i) => {
+                    const match = !q || card.dataset.search.includes(q);
+                    if (match) matches++;
+                    const visible = match && (q || expanded || i < COLLAPSED_COUNT);
+                    card.classList.toggle('is-hidden', !visible);
+                    if (visible) shown++;
+                });
+                count.textContent = q
+                    ? matches + ' of ' + cards.length + ' projects match'
+                    : 'Showing ' + shown + ' of ' + cards.length + ' projects';
+                empty.classList.toggle('hidden', matches !== 0);
+                toggle.parentElement.classList.toggle('hidden', !!q);
+                toggleLabel.textContent = expanded ? 'Show fewer' : 'Show all ' + cards.length + ' projects';
+            }
+            toggle.addEventListener('click', () => { expanded = !expanded; update(); });
+            search.addEventListener('input', update);
+            update();
+        })();
+
+        // ---- GitHub contribution graph ----
+        const GH_USER = 'tnithin236';
+        (async function () {
+            const summary = document.getElementById('gh-summary');
+            const grid = document.getElementById('gh-grid');
+            try {
+                const res = await fetch('https://github-contributions-api.jogruber.de/v4/' + GH_USER + '?y=last');
+                if (!res.ok) throw new Error('bad response');
+                const data = await res.json();
+                const days = data.contributions || [];
+                if (!days.length) throw new Error('no data');
+                const total = (data.total && (data.total.lastYear ?? Object.values(data.total)[0]))
+                    ?? days.reduce((s, d) => s + d.count, 0);
+
+                // Pad so the first day lands on the correct weekday row (Sunday = row 1)
+                const firstDow = new Date(days[0].date + 'T00:00:00').getDay();
+                for (let i = 0; i < firstDow; i++) {
+                    const pad = document.createElement('span');
+                    pad.className = 'gh-cell pad';
+                    grid.appendChild(pad);
+                }
+                days.forEach(d => {
+                    const cell = document.createElement('span');
+                    cell.className = 'gh-cell' + (d.level > 0 ? ' l' + d.level : '');
+                    cell.title = d.count + ' contribution' + (d.count === 1 ? '' : 's') + ' on ' + d.date;
+                    grid.appendChild(cell);
+                });
+
+                summary.innerHTML = '<strong class="text-ink">' + Number(total).toLocaleString() +
+                    '</strong> contributions on GitHub in the last year — ' +
+                    '<a href="https://github.com/' + GH_USER + '" target="_blank" rel="noopener" class="text-cyan hover:underline">@' + GH_USER + '</a>.';
+                const scroller = document.getElementById('gh-scroll');
+                scroller.scrollLeft = scroller.scrollWidth; // show most recent weeks on mobile
+            } catch (e) {
+                summary.innerHTML = 'See my activity on <a href="https://github.com/' + GH_USER + '" target="_blank" rel="noopener" class="text-cyan hover:underline">GitHub (@' + GH_USER + ')</a>.';
+                document.getElementById('gh-scroll').style.display = 'none';
+                document.getElementById('gh-legend').style.display = 'none';
+            }
+        })();
+
+        // Scroll progress bar
+        const progressBar = document.getElementById('scroll-progress');
+        function updateProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressBar.style.width = pct + '%';
+        }
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        updateProgress();
+
+        // Slow, polished side-to-center scroll reveals. Reveals play once, so scrolling back up stays stable.
+        const revealSelectors = [
+            'main > section',
+            'section h2',
+            '.panel',
+            '.repo-card',
+            '.relative.pl-8',
+            '#about .lg\\:col-span-5',
+            '.grimoire',
+            '#contact form'
+        ];
+        const revealEls = [...new Set(document.querySelectorAll(revealSelectors.join(',')))];
+        revealEls.forEach((el, i) => {
+            el.classList.add('reveal');
+            if (el.matches('section h2, main > section')) {
+                el.classList.add('from-center');
+                if (el.matches('section h2')) el.classList.add('section-heading');
+            } else if (i % 2 === 1) {
+                el.classList.add('from-right');
+            }
+            // Skills, GitHub contributions and publication/certificate panels also glide in from the sides.
+            const glideSection = el.closest('#skills, #shipping, #publications');
+            if (glideSection && el.matches('.panel')) {
+                const panelIndex = [...glideSection.querySelectorAll('.panel')].indexOf(el);
+                el.classList.remove('from-center', 'from-right');
+                el.classList.add(panelIndex % 2 === 0 ? 'glide-left' : 'glide-right');
+                el.style.transitionDelay = (panelIndex % 2) * 180 + 'ms';
+            }
+            // Featured project cards explicitly alternate from LEFT and RIGHT toward center.
+            if (el.closest('#projects-grid')) {
+                const projectIndex = [...el.parentElement.children].indexOf(el);
+                el.classList.remove('from-center', 'from-right');
+                el.classList.add(projectIndex % 2 === 0 ? 'project-from-left' : 'project-from-right');
+                el.style.transitionDelay = (projectIndex % 2) * 220 + 'ms';
+            } else {
+                // Slower stagger so each item has time to land before the next appears.
+                el.style.transitionDelay = (i % 4) * 150 + 'ms';
+            }
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -55px 0px' });
+        revealEls.forEach(el => observer.observe(el));
+
+        // Count-up animation for the metrics ribbon
+        function animateCountUp(el) {
+            const text = el.textContent.trim();
+            const match = text.match(/^([\d.]+)(.*)$/);
+            if (!match) return;
+            const target = parseFloat(match[1]);
+            const suffix = match[2];
+            const isFloat = match[1].includes('.');
+            const duration = 1400;
+            const start = performance.now();
+            function tick(now) {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = target * eased;
+                el.textContent = (isFloat ? current.toFixed(2) : Math.round(current)) + suffix;
+                if (progress < 1) requestAnimationFrame(tick);
+                else el.textContent = text;
+            }
+            requestAnimationFrame(tick);
+        }
+        const metricNumbers = document.querySelectorAll('.font-mono.font-bold.text-arcaneBright');
+        const metricObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCountUp(entry.target);
+                    metricObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        metricNumbers.forEach(el => metricObserver.observe(el));
+
+        // Typing effect for the terminal code preview
+        const codeBlock = document.getElementById('terminal-code');
+        if (codeBlock) {
+            const lines = Array.from(codeBlock.children);
+            lines.forEach(line => line.style.visibility = 'hidden');
+            const termObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        lines.forEach((line, i) => {
+                            setTimeout(() => {
+                                line.style.visibility = 'visible';
+                                line.style.opacity = '0';
+                                line.style.transform = 'translateX(-8px)';
+                                line.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                                requestAnimationFrame(() => {
+                                    line.style.opacity = '1';
+                                    line.style.transform = 'translateX(0)';
+                                });
+                            }, i * 220);
+                        });
+                        termObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.4 });
+            termObserver.observe(codeBlock);
+        }
+    </script>
+</body>
+</html>
